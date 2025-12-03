@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- [중요] th:fragment 이름을 "headerFragment"로 지정 -->
+<th:block th:fragment="headerFragment">
+
+    <!-- 1. 공통 CSS 및 라이브러리 로드 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/modal.css}">
+
+    <!-- 2. 헤더 본문 -->
+    <header class="header">
+        <div class="header-top">
+            <div class="logo">
+                <a th:href="@{/}">Yammi</a>
+            </div>
+            
+            <!-- 검색 기능 연결 -->
+            <form th:action="@{/recipe/search}" method="get" class="search-bar">
+                <input type="text" name="keyword" placeholder="레시피 검색 (예: 제육볶음)" th:value="${keyword}"/>
+                <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+            </form>
+
+            <!-- [로그인 로직] 세션 상태에 따라 버튼 변경 -->
+            <!-- 비로그인 시 -->
+            <th:block th:if="${session.loginUser == null}">
+                <button class="login-btn" onclick="location.href='/user/loginForm'">로그인</button>
+            </th:block>
+
+            <!-- 로그인 시 -->
+            <th:block th:if="${session.loginUser != null}">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span th:text="${session.loginUser.name} + '님'" style="font-weight:bold; font-size:14px;"></span>
+                    <button class="login-btn" style="background-color:#777;" onclick="location.href='/user/logout'">로그아웃</button>
+                </div>
+            </th:block>
+        </div>
+
+        <nav class="nav-bar">
+            <ul>
+                <!-- 메뉴 링크 연결 -->
+                <li><a th:href="@{/chat}">AI 야미에게 채팅하기</a></li>
+                <li><a th:href="@{/category}">분류별 레시피</a></li>
+                <!-- member-only 클래스는 header.js에서 로그인 체크용으로 사용됨 -->
+                <li><a th:href="@{/recipe/favorites}" class="member-only">즐겨찾기한 레시피</a></li>
+                <li><a th:href="@{/fridge/list}" class="member-only">나의 냉장고</a></li>
+            </ul>
+        </nav>
+        
+        <!-- JS에서 로그인 상태 확인용 히든 필드 -->
+        <input type="hidden" id="isLoggedIn" th:value="${session.loginUser != null}">
+    </header>
+
+    <!-- 3. 공통 모달 (알림창) -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <h2 id="modal-title">알림</h2>
+            <p id="modal-message">알람 내용</p>
+            <button class="btn" id="closeModalBtn">닫기</button>
+        </div>
+    </div>
+
+    <!-- 4. 공통 JS 연결 -->
+    <input type="hidden" id="isLoggedInField" th:value="${session.loginUser != null}">
+    <script th:src="@{/js/header.js}"></script>
+    <script th:src="@{/js/modal.js}"></script>
+
+</th:block>
+</html>

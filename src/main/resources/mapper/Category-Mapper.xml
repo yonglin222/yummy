@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Category-Mapper"> 
+    
+    <select id="findAllTypeCategories" resultType="com.yummy.beckend.dto.CategoryDto">
+        SELECT TYPE_ID AS id, TYPE_NAME AS name, 'type' AS type
+        FROM TYPE_CATEGORY ORDER BY TYPE_ID ASC
+    </select>
+
+    <select id="findAllMethodCategories" resultType="com.yummy.beckend.dto.CategoryDto">
+        SELECT METHOD_ID AS id, METHOD_NAME AS name, 'method' AS type
+        FROM METHOD_CATEGORY ORDER BY METHOD_ID ASC
+    </select>
+    
+    <sql id="selectRecipeListColumns">
+        r.RECIPE_ID, r.NAME, r.SERVING, r.TIME, r.INGREDIENT, r.SPICY_INGREDIENT
+    </sql>
+
+    <select id="findRecipesByTypeAndMethod" parameterType="map" resultType="com.yummy.beckend.dto.RecipeDto">
+        SELECT DISTINCT 
+            <include refid="selectRecipeListColumns"/> 
+        FROM RECIPE r
+
+        <choose>
+            <when test="typeCatId != 0 and methodCatId != 0">
+                INNER JOIN RECIPE_TYPE_CATEGORY rtc ON r.RECIPE_ID = rtc.RECIPE_ID
+                INNER JOIN RECIPE_METHOD_CATEGORY rmc ON r.RECIPE_ID = rmc.RECIPE_ID
+                WHERE rtc.TYPE_ID = #{typeCatId}
+                  AND rmc.METHOD_ID = #{methodCatId}
+            </when>
+
+            <when test="typeCatId != 0 and methodCatId == 0">
+                INNER JOIN RECIPE_TYPE_CATEGORY rtc ON r.RECIPE_ID = rtc.RECIPE_ID
+                WHERE rtc.TYPE_ID = #{typeCatId}
+            </when>
+
+            <when test="typeCatId == 0 and methodCatId != 0">
+                INNER JOIN RECIPE_METHOD_CATEGORY rmc ON r.RECIPE_ID = rmc.RECIPE_ID
+                WHERE rmc.METHOD_ID = #{methodCatId}
+            </when>
+
+            <otherwise>
+                </otherwise>
+        </choose>
+        
+        ORDER BY r.RECIPE_ID
+    </select>
+
+</mapper>

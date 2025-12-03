@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${recipe.name}">레시피 상세</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <style>
+        .favorite-btn.favorite { background-color: #ffda00; } 
+    </style>
+</head>
+<body>
+
+    <a th:href="@{/recipe/list}">목록으로</a>
+
+    <h2 th:text="${recipe.name}">레시피 이름</h2>
+    
+    <button id="favorite-toggle-btn" 
+            th:attr="data-recipe-id=${recipe.recipeId}" 
+            th:text="${recipe.isFavorite ? '⭐️ 즐겨찾기 해제' : '⭐ 즐겨찾기 추가'}"
+            th:class="${recipe.isFavorite ? 'favorite-btn favorite' : 'favorite-btn'}"
+            onclick="toggleFavorite(this)"></button>
+            
+    <hr>
+    
+    <h3>요약 정보</h3>
+    <p>조리시간: <span th:text="${recipe.time} + '분'"></span></p>
+    <p>인분: <span th:text="${recipe.serving} + '인분'"></span></p>
+    <div th:if="${recipe.typeCategories != null and !recipe.typeCategories.empty}">
+        <p>종류별 카테고리: 
+            <span th:each="cat, stat : ${recipe.typeCategories}" th:text="${cat} + ${stat.last ? '' : ', '}"></span>
+        </p>
+    </div>
+
+    <div th:if="${recipe.methodCategories != null and !recipe.methodCategories.empty}">
+        <p>방법별 카테고리: 
+            <span th:each="cat, stat : ${recipe.methodCategories}" th:text="${cat} + ${stat.last ? '' : ', '}"></span>
+        </p>
+    </div>
+    <h3>재료</h3>
+    <p th:text="'주재료: ' + ${recipe.ingredient}"></p>
+    <p th:text="'양념 및 부재료: ' + ${recipe.spicyIngredient}"></p>
+
+    <h3>만드는 과정</h3>
+    
+    <ol>
+        <li th:each="step : ${recipe.methodSteps}" th:text="${step}"></li>
+    </ol>
+    
+    <script>
+        // recipe/list.html 및 recipe/detail.html의 toggleFavorite 함수 수정
+
+function toggleFavorite(button) {
+    const recipeId = $(button).data('recipe-id');
+
+    $.ajax({
+        url: '/recipe/toggleFavorite',
+        type: 'POST',
+        data: { recipeId: recipeId },
+        dataType: 'json',
+        success: function(response) {
+            
+            // ⭐️ 수정된 로직: UNAUTHORIZED 상태 확인
+            if (response.status === 'UNAUTHORIZED' && response.redirectUrl) {
+                alert(response.message + " 로그인 페이지로 이동합니다.");
+                window.location.href = response.redirectUrl; // 로그인 페이지로 이동
+                return; // 함수 종료
+            }
+            
+            // ⭐️ OK 상태 (로그인 되어 있음)
+            alert(response.message);
+            if (response.status === 'OK') {
+                // ... (기존 버튼 UI 업데이트 로직 유지)
+                if (response.isFavorite) {
+                    $(button).text('⭐️ 즐겨찾기 해제').addClass('favorite');
+                } else {
+                    $(button).text('⭐ 즐겨찾기 추가').removeClass('favorite');
+                }
+                // 만약 즐겨찾기 목록 페이지라면 해제 시 항목 숨김 (list.html에만 해당)
+                if (window.location.pathname.includes('/favorites') && !response.isFavorite) {
+                     $(button).closest('.recipe-item').fadeOut(300);
+                }
+            }
+        },
+        error: function() {
+            alert("처리 중 오류가 발생했습니다. 로그인 상태를 확인해주세요.");
+        }
+    });
+}
+    </script>
+</body>
+</html>

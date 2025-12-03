@@ -1,0 +1,101 @@
+body {
+  margin: 0;
+  background: #f8f8f8;
+}
+
+.login-container {
+  width: 420px;
+  margin: 120px auto;
+  padding: 34px 36px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.underline {
+  display: flex;
+  height: 3px;
+  background: #89ca6a;
+  margin: 0 auto 22px auto;
+}
+
+/* 입력 폼 */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form label {
+  margin: 14px 0 6px;
+  font-size: 14px;
+}
+
+.login-form input {
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+}
+
+/* 버튼 */
+.btn-wrap {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-wrap button {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.15s;
+  font-size: 14px;
+}
+
+.text-expand {
+  letter-spacing: 2px;
+}
+
+.register-btn {
+  display: inline-block;
+  text-align: center;
+  padding: 12px 0;
+  border-radius: 6px;
+  background: #777777;
+  color: #fff;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  flex: 1;
+  transition: 0.2s ease;
+}
+
+.register-btn:hover {
+  background: #666666;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.09);
+}
+
+.logins-btn {
+  background: #89ca6a;
+  color: #fff;
+  border: none;
+}
+
+.logins-btn:hover {
+  background-color: #6bbd45;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.09);
+}
+
+/* 메시지 */
+.error-message {
+  text-align: center;
+  font-size: 13px;
+  color: #d42e2e;
+  margin-top: 12px;
+  min-height: 18px;
+}

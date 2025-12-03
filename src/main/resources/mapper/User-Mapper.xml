@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="User-Mapper"> 
+
+    <insert id="insertUser" parameterType="com.yummy.beckend.dto.UserDto">
+        INSERT INTO USERS (
+            ID, NAME, EMAIL, PASSWORD
+        ) VALUES (
+            USERS_SEQ.NEXTVAL,
+            #{name},
+            #{email},
+            #{password}
+        )
+    </insert>
+
+    <select id="countByName" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE NAME = #{name}
+    </select>
+
+    <select id="countByEmail" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE EMAIL = #{email}
+    </select>
+
+    <select id="findByEmail" resultType="com.yummy.beckend.dto.UserDto">
+        SELECT
+            ID,
+            NAME,
+            EMAIL,
+            PASSWORD
+        FROM USERS
+        WHERE EMAIL = #{email}
+    </select>
+
+</mapper>

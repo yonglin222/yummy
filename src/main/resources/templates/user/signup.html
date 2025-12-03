@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 - Yammi</title>
+
+    <!-- [1] JS 파일에서 jQuery를 사용하므로 여기서 로드 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- [2] 회원가입 페이지 전용 CSS -->
+    <link rel="stylesheet" th:href="@{/css/signup.css}">
+</head>
+
+<body>
+
+    <!-- [3] 헤더 모듈 삽입 -->
+    <th:block th:insert="~{modules/header :: headerFragment}" />
+
+    <!-- 회원가입 컨테이너 -->
+    <div class="login-container">
+
+        <h2>회원가입</h2>
+        <div class="underline"></div>
+
+        <!-- [4] Form 설정 -->
+        <!-- id="registForm": signup.js에서 유효성 검사를 위해 이 ID를 찾습니다. -->
+        <!-- th:action: UserController의 /regist 경로로 데이터 전송 -->
+        <!-- th:object: Controller에서 넘어온 에러 메시지 바인딩용 -->
+        <form class="signup-form" id="registForm" th:action="@{/user/regist}" method="post" th:object="${userDto}">
+            
+            <label for="nickname">닉네임</label>
+            <div class="input-wrap">
+                <!-- id="nickname": JS용 / name="name": DTO 바인딩용 -->
+                <input id="nickname" name="name" type="text" placeholder="닉네임 입력">
+                <button type="button" class="check-btn nickname-check">중복확인</button>
+            </div>
+            <ul>*닉네임은 10자(한글,영문)이하로 작성해주세요.</ul>
+            <!-- JS 메시지 출력 공간 -->
+            <p class="msg" id="nicknameMsg"></p>
+            <!-- 서버측 에러 메시지 출력 공간 (중복 등) -->
+            <p class="msg" style="color:#d42e2e" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+
+            <label for="email">이메일</label>
+            <div class="input-wrap">
+                <!-- id="email": JS용 / name="email": DTO 바인딩용 -->
+                <input id="email" name="email" type="email" placeholder="이메일 입력">
+                <button type="button" class="check-btn email-check">중복확인</button>
+            </div>
+            <!-- JS 메시지 -->
+            <p class="msg" id="emailMsg"></p>
+            <!-- 서버측 에러 메시지 -->
+            <p class="msg" style="color:#d42e2e" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
+
+            <label for="password">비밀번호</label>
+            <!-- id="password": JS용 / name="password": DTO 바인딩용 -->
+            <input id="password" name="password" type="password" placeholder="비밀번호 입력">
+            <ul>*비밀번호는 8자~16자(영어 소문자,특수문자,숫자 각1개 이상)로 작성해주세요.</ul>
+            <p class="msg" id="checkMsg"></p>
+            <p class="msg" style="color:#d42e2e" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+
+
+            <label for="passwordCheck">비밀번호 확인</label>
+            <!-- 비밀번호 확인은 DB에 안 넘기므로 name 속성 불필요 -->
+            <input id="passwordCheck" type="password" placeholder="비밀번호를 한번더 입력하세요.">
+            <p class="msg" id="pwMsg"></p>
+
+            <div class="btn-wrap">
+                <!-- type="submit"으로 설정하여 JS 검사 통과 시 전송되도록 함 -->
+                <button type="submit" class="register-btn">
+                    <span class="text-expand">가입하기</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- [5] 푸터 모듈 삽입 -->
+    <th:block th:insert="~{modules/footer :: footer-body}"/>
+
+    <!-- [6] JS 파일 연결 -->
+    <!-- signup.js: 중복확인 AJAX 및 폼 제출 전 유효성 검사 로직 -->
+    <script th:src="@{/js/modal.js}"></script>
+    <script th:src="@{/js/header.js}"></script>
+    <script th:src="@{/js/signup.js}"></script>
+    
+</body>
+</html>

@@ -1,0 +1,121 @@
+@charset "utf-8";
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: "맑은 고딕";
+}
+
+/*불릿 제거*/
+ul, ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Sans KR", sans-serif;
+  text-align: center;
+  background-color: #fff;
+}
+
+.intro-container {
+  margin-top: 100px;
+}
+
+.intro-ask {
+  font-size: 18px;
+  margin-bottom: 50px;
+}
+
+.intro-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 60px;
+}
+
+.intro-title span {
+  color: #66ad46;
+  font-weight: 800;
+  font-size: 22px;
+
+}
+
+
+.intro-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+
+
+/* 입력창 + 버튼 */
+.input-wrap {
+  position: relative;
+  width: 600px;
+}
+
+/* 입력창 */
+.input-wrap input {
+  width: 100%;
+  padding: 12px 120px 12px 16px; /* 버튼 공간 확보: 오른쪽 패딩 120px */
+  border-radius: 12px;
+  border: none;
+  background-color: #e8f3e8;
+  font-size: 15px;
+  outline: none;
+}
+
+/* 버튼을 안쪽으로 넣기 */
+.input-wrap button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 36px;
+  padding: 0px 15px;
+  background-color: #6bae59;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* 버튼 hover */
+.input-wrap button:hover {
+  background-color: #5ca64f;
+}
+
+/* 아이콘 자체 스타일 */
+.send-btn i {
+  font-size: 15px;
+  color: #ffffff;
+}
+
+
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.7s ease-out forwards;
+}
+
+/* 등장 순서 */
+.delay-1 {
+  animation-delay: 0.8s;
+}
+
+.delay-2 {
+  animation-delay: 1.5s;  /* 챗 입력창 */
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

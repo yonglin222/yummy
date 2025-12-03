@@ -1,0 +1,185 @@
+@charset "utf-8";
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: "맑은 고딕";
+}
+
+/*불릿 제거*/
+ul, ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+
+body {
+  margin: 0;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+}
+
+/* 전체 채팅 UI */
+.chat-wrapper {
+  width: 100%;
+  max-width: 900px;
+  height: 100vh;
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+
+  margin-top: 80px;
+}
+
+/* 대화창 */
+.chat-box {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: 160px;
+}
+
+/* 말풍선 기본 */
+.msg {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+/* AI(왼쪽) */
+.msg.bot .bubble {
+  background: #e5e5e5;
+  color: #333;
+  padding: 14px 18px;
+  border-radius: 12px;
+  max-width: 70%;
+  line-height: 1.6;
+}
+
+/* 사용자(오른쪽) */
+.msg.user {
+  justify-content: flex-end;
+}
+
+.msg.user .bubble {
+  background: #e8f3e8;
+  color: #222;
+  padding: 14px 18px;
+  border-radius: 12px;
+  max-width: 70%;
+  line-height: 1.6;
+}
+
+/* 하단 입력창 전체 (fixed 유지) */
+.chat-input {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 900px;
+
+  padding: 15px 20px;
+  background: #ffffff;
+  border-top: 1px solid #ddd;
+
+  /* Flex는 input-wrap 안에서 해결되므로 필요 없음 */
+  display: flex;
+  justify-content: center;
+}
+
+/* input + button 묶음: main 스타일 기반 */
+.input-wrap {
+  position: relative;
+  width: 100%;            /* mobile 대응 */
+  max-width: 800px;       /* main보다 약간 넓게 */
+}
+
+/* 입력창 → main 스타일 그대로 */
+.input-wrap input {
+  width: 100%;
+  padding: 12px 120px 12px 16px;
+  border-radius: 12px;
+  border: none;
+  background-color: #e8f3e8;
+  font-size: 15px;
+  outline: none;
+}
+
+/* 버튼 → main 스타일 그대로 */
+.input-wrap button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 36px;
+  padding: 0px 15px;
+
+  background-color: #6bae59;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* hover */
+.input-wrap button:hover {
+  background-color: #5ca64f;
+}
+
+/* 아이콘 */
+.send-btn i {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+
+
+/* 말풍선 등장 애니메이션 */
+@keyframes bubbleFade {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.msg .bubble {
+  animation: bubbleFade 0.3s ease-out forwards;
+}
+
+
+/* AI typing indicator (...) */
+.typing-indicator {
+  display: inline-block;
+  padding: 14px 20px;
+  background: #dcdcdc;
+  border-radius: 12px;
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.typing-indicator span {
+  display: inline-block;
+  margin-right: 2px;
+  animation: blink 1.4s infinite both;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0% { opacity: 0.2; }
+  20% { opacity: 1; }
+  100% { opacity: 0.2; }
+}

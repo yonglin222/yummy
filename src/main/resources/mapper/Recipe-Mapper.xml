@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Recipe-Mapper"> 
+
+    <sql id="selectRecipeListColumns">
+        r.RECIPE_ID, r.NAME, r.SERVING, r.TIME, r.INGREDIENT, r.SPICY_INGREDIENT
+    </sql>
+
+    <sql id="selectRecipeDetailColumns">
+        r.RECIPE_ID, r.NAME, r.SERVING, r.TIME, r.INGREDIENT, r.SPICY_INGREDIENT, r.METHOD
+    </sql>
+    
+    <sql id="checkFavorite">
+        (SELECT COUNT(*) FROM FAVORITES fav WHERE fav.RECIPE_ID = r.RECIPE_ID AND fav.USER_ID = #{userId, jdbcType=NUMERIC})
+    </sql>
+    
+    <select id="findAll" resultType="com.yummy.beckend.dto.RecipeDto">
+        SELECT
+            <include refid="selectRecipeListColumns"/>
+        FROM RECIPE r
+        ORDER BY r.RECIPE_ID
+    </select>
+
+    <select id="findByNameKeyword" parameterType="String" resultType="com.yummy.beckend.dto.RecipeDto">
+        SELECT
+            <include refid="selectRecipeListColumns"/> 
+        FROM RECIPE r
+        WHERE r.NAME LIKE '%' || #{keyword} || '%'
+    </select>
+    
+    <select id="findById" parameterType="map" resultType="com.yummy.beckend.dto.RecipeDto">
+        SELECT
+            <include refid="selectRecipeDetailColumns"/>,
+            CASE 
+                WHEN #{userId, jdbcType=NUMERIC} IS NOT NULL 
+                THEN <include refid="checkFavorite"/> 
+                ELSE 0 
+            END AS ISFAVORITE
+        FROM RECIPE r
+        WHERE r.RECIPE_ID = #{recipeId}
+    </select>
+
+    <select id="findTypeCategoriesByRecipeId" parameterType="long" resultType="string">
+        SELECT tc.TYPE_NAME
+        FROM TYPE_CATEGORY tc
+        JOIN RECIPE_TYPE_CATEGORY rtc ON tc.TYPE_ID = rtc.TYPE_ID
+        WHERE rtc.RECIPE_ID = #{recipeId}
+    </select>
+
+    <select id="findMethodCategoriesByRecipeId" parameterType="long" resultType="string">
+        SELECT mc.METHOD_NAME
+        FROM METHOD_CATEGORY mc
+        JOIN RECIPE_METHOD_CATEGORY rmc ON mc.METHOD_ID = rmc.METHOD_ID
+        WHERE rmc.RECIPE_ID = #{recipeId}
+    </select>
+
+    <insert id="insertFavorite" parameterType="map">
+        INSERT INTO FAVORITES (ID, USER_ID, RECIPE_ID)
+        VALUES (FAVORITES_SEQ.NEXTVAL, #{userId}, #{recipeId})
+    </insert>
+
+    <delete id="deleteFavorite" parameterType="map">
+        DELETE FROM FAVORITES
+        WHERE USER_ID = #{userId} AND RECIPE_ID = #{recipeId}
+    </delete>
+
+    <select id="countFavorite" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM FAVORITES
+        WHERE USER_ID = #{userId} AND RECIPE_ID = #{recipeId}
+    </select>
+    
+    <select id="findFavoritesByUserId" parameterType="long" resultType="com.yummy.beckend.dto.RecipeDto">
+        SELECT
+            <include refid="selectRecipeListColumns"/>,
+            1 AS ISFAVORITE
+        FROM RECIPE r
+        JOIN FAVORITES f ON r.RECIPE_ID = f.RECIPE_ID
+        WHERE f.USER_ID = #{userId}
+        ORDER BY f.ID DESC
+    </select>
+</mapper>

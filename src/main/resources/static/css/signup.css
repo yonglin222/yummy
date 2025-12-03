@@ -1,0 +1,109 @@
+body {
+  margin: 0;
+  background: #f8f8f8;
+}
+
+.login-container {
+  width: 520px;
+  margin: 120px auto;
+  padding: 34px 36px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.underline {
+  display: flex;
+  height: 3px;
+  background: #89ca6a;
+  margin: 0 auto 22px auto;
+}
+
+.input-wrap {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* 입력 폼 */
+.signup-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.signup-form label {
+  margin: 14px 0 6px;
+  font-size: 14px;
+}
+
+.signup-form input {
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  flex: 1;
+}
+
+.signup-form ul {
+  font-size: 10px;
+}
+
+/* 버튼 */
+.check-btn {
+  text-align: center;
+  padding: 10px 10px;
+  background: #777;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+.check-btn:hover {
+  background: #666666;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.09);
+}
+
+.btn-wrap {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-wrap button {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.15s;
+  font-size: 14px;
+}
+
+.text-expand {
+  letter-spacing: 5px;
+}
+
+.register-btn {
+  background: #89ca6a;
+  border: none;
+  color: #fff;
+}
+
+.register-btn:hover {
+  background: #6bbd45;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.09);
+}
+
+/* 메시지 */
+.msg {
+  font-size: 13px;
+  margin: 4px 0 0 2px;
+  height: 16px;
+  color: #d42e2e;
+}

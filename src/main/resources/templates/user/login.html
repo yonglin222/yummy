@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - Yammi</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+
+<body>
+
+    <th:block th:insert="~{modules/header :: headerFragment}" />
+
+    <div class="login-container">
+
+        <h2>로그인</h2>
+        <div class="underline"></div>
+
+        <form class="login-form" id="loginForm" th:action="@{/user/login}" method="post">
+            
+            <label for="email">이메일</label>
+            <input id="email" name="email" type="email" placeholder="이메일 입력">
+
+            <label for="password">비밀번호</label>
+            <input id="password" name="password" type="password" placeholder="비밀번호 입력">
+            
+            <div class="btn-wrap">
+                <a th:href="@{/user/registForm}" class="register-btn">
+                    <span class="text-expand">회원가입</span>
+                </a>
+                
+                <button type="submit" class="logins-btn">
+                    <span class="text-expand">로그인</span>
+                </button>
+            </div>
+        </form>
+
+        <p class="error-message" id="loginMessage" th:if="${message}" th:text="${message}"></p>
+        
+        <p class="error-message" id="jsMessage" style="display:none;"></p>
+
+    </div>
+
+    <th:block th:insert="~{modules/footer :: footer-body}" />
+
+    <script th:src="@{/js/modal.js}"></script>
+    <script th:src="@{/js/header.js}"></script>
+
+    <script th:src="@{/js/login.js}"></script>
+
+</body>
+</html>
