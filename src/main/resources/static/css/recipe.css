@@ -1,0 +1,102 @@
+@charset "utf-8";
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: "맑은 고딕";
+}
+
+/*불릿 제거*/
+ul, ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+/* 전체 레시피 영역 */
+.recipe-page {
+  max-width: 960px;
+  margin: 40px auto 80px;
+}
+
+/* 카드 박스 */
+.recipe-card {
+  padding: 24px 32px 40px;
+  background: #ffffff;
+}
+
+/* 상단 영역 */
+.recipe-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.recipe-title-box h1 {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.recipe-meta {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 즐겨찾기 버튼 */
+.favorite-btn {
+  border: 1px solid #ffffff;
+  border-radius: 6px;
+  padding: 1px 5px;
+  font-size: 28px;
+  background: #fff;
+  cursor: pointer;
+}
+.favorite-btn.active {
+  color: #f9b400;
+}
+
+/* 구분선 */
+.recipe-divider {
+  border: 0;
+  border-top: 1px solid #d9d9d9;
+  margin: 20px 0 24px;
+}
+
+/* 재료 / 양념 2단 레이아웃 */
+.recipe-main {
+  display: flex;
+  gap: 60px;
+  margin-bottom: 24px;
+}
+
+.recipe-col {
+  flex: 1;
+}
+
+.recipe-col h3,
+.recipe-steps h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+#ingredient-list li,
+#seasoning-list li,
+#steps-list li {
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* 만드는 법 */
+.recipe-steps {
+  margin-top: 12px;
+}
+
+#steps-list {
+  list-style-type: decimal;
+  padding-left: 20px;
+}

@@ -1,64 +1,33 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 야미와 채팅하기 - Yammi</title>
-    
+    <title>AI 야미와 채팅하기</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <link rel="stylesheet" th:href="@{/css/chat.css}">
+    <link rel="stylesheet" href="/modules/static/css/chat.css">
 </head>
+
 <body>
 
-    <!-- <th:block th:insert="~{modules/header :: headerFragment}" /> -->
-    
+    <!-- 채팅 전체 영역 -->
     <div class="chat-wrapper">
+        <!-- 대화 표시 영역 -->
         <div class="chat-box" id="chatBox">
-            
+            <!-- 기본 AI 메시지 -->
             <div class="msg bot">
                 <div class="bubble">
                     안녕하세요. 저는 <strong>AI 야미</strong>예요😊<br>
                     레시피를 추천해드릴게요!
                 </div>
             </div>
-
-            <th:block th:if="${startUserMsg != null}">
-                
-                <div class="msg user">
-                    <div class="bubble" th:text="${startUserMsg}"></div>
-                </div>
-
-                <div class="msg bot">
-                    <div class="bubble" th:text="${startAiMsg}"></div>
-                </div>
-
-                <div class="msg bot" th:if="${startRecipe != null}">
-                    <div class="bubble" style="background: #fff; border: 1px solid #ddd; padding: 0; overflow: hidden;">
-                        <div style="padding: 15px;">
-                            <h3 style="margin: 0 0 10px 0; font-size: 16px;">
-                                🍳 <span th:text="${startRecipe.name}">요리명</span>
-                            </h3>
-                            <p style="margin: 0; font-size: 13px; color: #666;">
-                                <span th:text="${startRecipe.serving}">1</span>인분 · 
-                                <span th:text="${startRecipe.time}">10</span>분
-                            </p>
-                        </div>
-                        <a th:href="@{/recipe/detail/{id}(id=${startRecipe.recipeId})}" 
-                           style="display: block; background: #6bae59; color: white; text-align: center; 
-                                  padding: 10px; text-decoration: none; font-size: 14px;">
-                           레시피 보러가기
-                        </a>
-                    </div>
-                </div>
-            </th:block>
-
         </div>
-        
+
+        <!-- 하단 입력창 -->
         <form class="chat-input" id="chatForm">
             <div class="input-wrap">
-                <input type="text" id="userInput" placeholder="메시지를 입력하세요..." autocomplete="off">
+                <input type="text" id="userInput" placeholder="메시지를 입력하세요...">
                 <button type="submit" class="send-btn">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -66,18 +35,7 @@
         </form>
     </div>
 
-    <!-- <th:block th:insert="~{modules/footer :: footer-body}" /> -->
-
-    <script th:src="@{/js/modal.js}"></script>
-    <script th:src="@{/js/header.js}"></script>
-    <script th:src="@{/js/chat.js}"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const chatBox = document.getElementById("chatBox");
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
-    </script>
-
+    <script src="/modules/static/js/chat.js"></script>
 </body>
+
 </html>

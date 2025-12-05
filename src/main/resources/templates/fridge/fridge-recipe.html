@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>냉장고 레시피 추천</title>
+  <link rel="stylesheet" href="/modules/static/css/fridge-recipe.css">
+</head>
+
+<body>
+
+  <main class="fridge-recipe-page">
+
+    <h2 class="page-title">냉장고 기반 추천 레시피</h2>
+
+    <section class="recipe-box">
+      <h1 id="recipe-title"></h1>
+      <p id="recipe-meta"></p>
+
+      <h3>재료</h3>
+      <ul id="ingredient-list"></ul>
+
+      <h3>양념</h3>
+      <ul id="seasoning-list"></ul>
+
+      <h3>조리 단계</h3>
+      <ol id="steps-list"></ol>
+    </section>
+
+    <div class="btn-row">
+      <button id="newRecipeBtn" class="main-btn">새로운 레시피 불러오기</button>
+      <button id="backBtn" class="sub-btn">냉장고로 돌아가기</button>
+    </div>
+
+  </main>
+
+  <script src="/modules/static/js/fridge-recipe.js"></script>
+</body>
+
+</html>

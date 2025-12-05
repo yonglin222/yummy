@@ -27,20 +27,19 @@ body {
 
 .intro-ask {
   font-size: 18px;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .intro-title {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 600;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
 }
 
 .intro-title span {
   color: #66ad46;
   font-weight: 800;
-  font-size: 22px;
-
+  font-size: 25px;
 }
 
 
@@ -101,16 +100,16 @@ body {
 .fade-up {
   opacity: 0;
   transform: translateY(30px);
-  animation: fadeUp 0.7s ease-out forwards;
+  animation: fadeUp 0.4s ease-out forwards;
 }
 
 /* 등장 순서 */
 .delay-1 {
-  animation-delay: 0.8s;
+  animation-delay: 0.9s;
 }
 
 .delay-2 {
-  animation-delay: 1.5s;  /* 챗 입력창 */
+  animation-delay: 1.6s;
 }
 
 @keyframes fadeUp {

@@ -1,0 +1,351 @@
+@charset "utf-8";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "맑은 고딕";
+}
+
+ul, ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+
+body {
+  background: #ffffff;
+  color: #222;
+}
+
+/* ===== 페이지 공통 ===== */
+
+.page {
+  max-width: 1200px;
+  margin: 24px auto 60px;
+  padding: 0 24px 40px;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #6BBD45;
+}
+
+.title-row h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.delete-selected-btn {
+  border: 1px solid #d1d1d1;
+  background: #f0f0f0;
+  border-radius: 5px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.delete-selected-btn:hover{
+    background-color: #f0f0f0;
+}
+
+/* ===== 레이아웃 ===== */
+
+.fridge-layout {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr;   /* ← 냉장고 : 상온 = 60 : 40 비율 */
+  column-gap: 30px;
+
+  align-items: stretch;
+  margin-top: 25px;
+}
+
+/* 왼쪽 라벨(냉동고/냉장고) */
+
+.fridge-labels {                           
+  display: grid;
+  grid-template-rows: 1fr 1fr;  /* 위 1칸(냉동고) / 아래 1칸(냉장고) */
+  padding: 8px 0;                           /* 냉장고와 수평 맞추기 */
+}
+
+.label-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
+}
+
+.label-title {
+  font-weight: 700;
+}
+
+/* ========== 재료추가 버튼 ========== */
+.add-ingredient-btn {
+  display: inline-flex; 
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  
+  border-radius: 999px;
+  border: 1px solid #b5dea1;
+  background: #f0f7f0;
+  padding: 4px 10px; 
+  font-size: 12px;
+  cursor: pointer;
+
+  line-height: 1;
+}
+
+.fridge-labels .label-block:nth-child(2) {
+  position: relative;
+  top: 15px;   /* 손잡이 높이까지만 딱 내려옴 — 조절 가능 */
+}
+
+
+/* ===== 냉장고 ===== */
+
+.big-fridge {
+  background: linear-gradient(180deg, #f7f7f7 0%, #f2f2f2 100%);
+  border-radius: 22px;
+  border: 3px solid #d9d9d9;
+  position: relative;
+  
+  min-height: 430px;
+
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  overflow: visible;
+
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.fridge-section {
+  padding: 20px 32px 20px;
+}
+
+.fridge-section:first-child {
+  border-bottom: 2px solid #e2e2e2;
+}
+
+
+/* 냉장고 손잡이 (왼쪽 가운데) */
+
+.fridge-handle {
+  position: absolute;
+  left: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 80px;
+  height: 30px;
+  background: #a9b3be;
+  border-radius: 0 8px 8px 0;
+  border: 2px solid #7c848e;
+  box-shadow: inset 0 3px 4px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+/* 손잡이 분리선 */
+.fridge-handle::after {
+  content: "";
+  position: absolute;
+  top: 46%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 2px;
+  background: #7c848e;
+  opacity: 0.6;
+}
+
+
+/* ===== 상온(선반) 영역 ===== */
+
+/* 선반 + (오른쪽) 라벨/버튼 묶음 */
+.room-wrapper {
+  display: flex;
+  flex-direction: row-reverse;   /* 라벨/버튼이 오른쪽, 선반이 왼쪽 */
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/* 상온 글자 + 재료추가 버튼 (오른쪽 세로 정렬) */
+.room-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 4px;               /* 선반 윗줄이랑 거의 맞게 */
+}
+
+.room-label .label-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* 상온 선반 박스 */
+.room-shelf {
+  width: 100%;
+  min-height: 230px;
+
+  background: #fff4e8;
+  border-radius: 20px;
+  border: 2.5px solid #e0c3a8;
+
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* 선반 밑 동그라미(손잡이 느낌) */
+.shelf-feet {
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.shelf-feet span {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+
+  background: #d19a63;
+  border: 2px solid #a87943;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.22);
+}
+
+
+
+
+/* ===== 재료 리스트 공통 ===== */
+
+.section-body {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 재료 한 줄 */
+
+.ingredient-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+
+/* 체크박스 */
+
+.check-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.check-wrap input[type="checkbox"] {
+  appearance: none;      /* 기본 체크박스 제거 */
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid #cdcdcd;
+  cursor: pointer;
+  position: relative;
+  transition: 0.15s ease;
+}
+
+/* 체크됨 */
+
+.check-wrap input[type="checkbox"]:checked {
+  background-color: #ffffff; /* 얌미 포인트 색상 */
+}
+
+/* 체크 표시 대신 아주 작은 흰 점 */
+
+.check-wrap input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: #ef5353;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+/* 재료 정보 영역 */
+
+.ingredient-info .top-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ingredient-name {
+  font-weight: 600;
+}
+
+.ingredient-date {
+  font-size: 12px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1.5px solid #d1d1d1;
+  /* background-color: #ffffff; */
+}
+
+/* D-day 태그 */
+
+.ingredient-dday {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.ingredient-dday.warning {
+    font-weight: 700;
+  color: #d81b1b;
+}
+
+.ingredient-dday.expired {
+  background: #fecaca;
+  color: #991b1b;
+}
+
+.underline {
+  width: 100%;
+  height: 1px;
+  background: #dadada;
+  margin-top: 4px;
+}
+
+/* ===== 레시피 버튼 ===== */
+
+.bottom-area {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.recipe-btn {
+  border-radius: 50px;
+  padding: 14px 32px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, #ffe0e5, #daf8d6);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  font-size: 16px;
+}

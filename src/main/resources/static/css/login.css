@@ -24,6 +24,10 @@ h2 {
   margin: 0 auto 22px auto;
 }
 
+a {
+  text-decoration: none;
+}
+
 /* 입력 폼 */
 .login-form {
   display: flex;
@@ -92,7 +96,7 @@ h2 {
 }
 
 /* 메시지 */
-.error-message {
+.msg {
   text-align: center;
   font-size: 13px;
   color: #d42e2e;

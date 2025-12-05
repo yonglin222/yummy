@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>분류별 레시피</title>
+    <link rel="stylesheet" href="/modules/static/css/categories-recipe.css">
+    <link rel="stylesheet" href="../static/css/pagenation.css">
+    <link rel="stylesheet" href="../static/css/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="recipe-page"> <!-- 페이지 제목 -->
+        <div class="page-title">
+            <h2><i class="fa-solid fa-clipboard-list"></i> 분류별 레시피</h2>
+        </div>
+        <div class="underline"></div> <!-- 종류별 -->
+        <div class="filter-group"> <span class="filter-label">종류별:</span>
+            <div class="filter-buttons" id="categoryType">
+                <button class="filter-btn" type="button" data-type="side">밑반찬</button>
+                <button class="filter-btn" type="button" data-type="main">메인반찬</button>
+                <button class="filter-btn" type="button" data-type="soup">국/탕</button>
+                <button class="filter-btn" type="button" data-type="jjigae">찌개</button>
+                <button class="filter-btn" type="button" data-type="noodle">면/만두</button>
+                <button class="filter-btn" type="button" data-type="rice">밥/떡</button>
+                <button class="filter-btn" type="button" data-type="western">양식</button>
+                <button class="filter-btn" type="button" data-type="salad">샐러드</button>
+                <button class="filter-btn" type="button" data-type="bread">빵</button>
+                <button class="filter-btn" type="button" data-type="dessert">간식/디저트</button>
+            </div>
+        </div> <!-- 방법별 -->
+        <div class="filter-group"> <span class="filter-label">방법별:</span>
+            <div class="filter-buttons" id="categoryMethod">
+                <button class="filter-btn" type="button" data-type="fry">볶음</button>
+                <button class="filter-btn" type="button" data-type="pan">부침</button>
+                <button class="filter-btn" type="button" data-type="boil">조림</button>
+                <button class="filter-btn" type="button" data-type="mix">무침</button>
+                <button class="filter-btn" type="button" data-type="bibim">비빔</button>
+                <button class="filter-btn" type="button" data-type="steam">찜</button>
+                <button class="filter-btn" type="button" data-type="deep">튀김</button>
+                <button class="filter-btn" type="button" data-type="cook">삶기</button>
+                <button class="filter-btn" type="button" data-type="grill">굽기</button>
+                <button class="filter-btn" type="button" data-type="blanch">데치기</button>
+                <button class="filter-btn" type="button" data-type="etc">기타</button>
+            </div>
+        </div>
+        <div class="underline"></div>
+
+        <div id="recipeListPage">
+            <div class="recipe-list" id="recipeList"></div>
+        </div>
+
+        <div id="pagination" class="pagination"></div>
+
+        <div id="recipeDetailPage" style="display:none;">
+            <button id="backToList" class="back-btn"><i class="fa-solid fa-left-long"></i>목록보기</button>
+
+            <div class="detail-card-area">
+                <h2 id="detailTitle" class="detail-title"></h2>
+
+                <div class="detail-meta">
+                    <div class="people-time">
+                        <i class="fa-solid fa-clock"></i>
+                        <span id="detailCookTime"></span>
+                    </div>
+
+                    <div class="people-time">
+                        <i class="fa-solid fa-users"></i>
+                        <span id="detailServing"></span>
+                    </div>
+                </div>
+
+                <div class="detail-ingredient-row">
+                    <div class="ingredient-box">
+                        <h3>재료</h3>
+                        <ul id="detailIngredients"></ul>
+                    </div>
+
+                    <div class="ingredient-box">
+                        <h3>양념 재료</h3>
+                        <ul id="detailSeasoning"></ul>
+                    </div>
+                </div>
+
+                <div class="detail-recipe">
+                    <h3>조리법</h3>
+                    <ol id="detailCooking"></ol>
+                </div>
+
+                <button id="favoriteBtn" class="favorite-btn">
+                    <i class="fa-regular fa-star"></i>
+                    <span class="text">즐겨찻기</span>
+                </button>
+            </div>
+        </div>
+
+        <script src="/modules/static/js/categories-recipe.js"></script>
+        <script src="../static/js/fillter.js"></script>
+        <script src="../static/js/header.js"></script>
+        <script src="../static/js/pagenation.js"></script>
+
+</body>
+
+</html>

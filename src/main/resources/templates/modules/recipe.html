@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>레시피 상세</title>
+  <link rel="stylesheet" href="/modules/static/css/recipe.css">
+  <link rel="stylesheet" href="/modules/static/css/modal.css">
+  
+
+</head>
+
+<body>
+
+  <main class="recipe-page">
+
+    <section class="recipe-card">
+
+      <header class="recipe-top">
+        <div class="recipe-title-box">
+          <h1 id="recipe-title"></h1>
+          <p class="recipe-meta" id="recipe-meta"></p>
+        </div>
+
+        <button id="favorite-btn" class="favorite-btn">☆</button>
+      </header>
+
+      <hr class="recipe-divider" />
+
+      <section class="recipe-main">
+        <div class="recipe-col">
+          <h3>재료</h3>
+          <ul id="ingredient-list"></ul>
+        </div>
+
+        <div class="recipe-col">
+          <h3>양념재료</h3>
+          <ul id="seasoning-list"></ul>
+        </div>
+      </section>
+
+      <section class="recipe-steps">
+        <h3>만드는 법</h3>
+        <ol id="steps-list"></ol>
+      </section>
+
+    </section>
+  </main>
+
+  <script src="/modules/static/js/modal.js"></script>
+  <script src="/modules/static/js/recipe.js"></script>
+
+</body>
+
+</html>

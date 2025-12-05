@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>즐겨찾기</title>
+    <link rel="stylesheet" href="../static/css/header.css">
+    <link rel="stylesheet" href="../static/css/recipe.css">
+    <link rel="stylesheet" href="../static/css/pagenation.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .page-title i {
+            background: linear-gradient(135deg, #fff2b3, #f7d774, #e3b54a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="logo">
+                <a href="/modules/templates/main.html">Yammi</a>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="레시피 검색" />
+                <button id="searchBtn" type="button" class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+            <button onclick="location.href = 'login.html'" class="login-btn">로그인</button>
+        </div>
+
+        <nav class="nav-bar">
+            <ul>
+                <li><a href="#">AI 야미에게 채팅하기</a></li>
+                <li><a href="#">분류별 레시피</a></li>
+                <li><a href="#" id="member-only">즐겨찾기한 레시피</a></li>
+                <li><a href="#" id="member-only">나의 냉장고</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="recipe-page">
+        <div class="page-title">
+            <h2><i class="fa-solid fa-star"></i> 즐겨찾기</h2>
+        </div>
+        <div class="underline"></div>
+
+        <div id="recipeListPage">
+            <div class="recipe-list" id="recipeList"></div>
+        </div>
+
+        <div id="pagination" class="pagination"></div>
+
+        <div id="recipeDetailPage" style="display:none;">
+            <button id="backToList" class="back-btn"><i class="fa-solid fa-left-long"></i>목록보기</button>
+
+            <div class="detail-card-area">
+                <h2 id="detailTitle" class="detail-title"></h2>
+
+                <div class="detail-meta">
+                    <div class="people-time">
+                        <i class="fa-solid fa-clock"></i>
+                        <span id="detailCookTime"></span>
+                    </div>
+
+                    <div class="people-time">
+                        <i class="fa-solid fa-users"></i>
+                        <span id="detailServing"></span>
+                    </div>
+                </div>
+
+                <div class="detail-ingredient-row">
+                    <div class="ingredient-box">
+                        <h3>재료</h3>
+                        <ul id="detailIngredients"></ul>
+                    </div>
+
+                    <div class="ingredient-box">
+                        <h3>양념 재료</h3>
+                        <ul id="detailSeasoning"></ul>
+                    </div>
+                </div>
+
+                <div class="detail-recipe">
+                    <h3>조리법</h3>
+                    <ol id="detailCooking"></ol>
+                </div>
+
+                <button id="favoriteBtn" class="favorite-btn">
+                    <i class="fa-regular fa-star"></i>
+                    <span class="text">즐겨찻기</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../static/js/recipe.js"></script>
+    <script src="../static/js/fillter.js"></script>
+    <script src="../static/js/header.js"></script>
+    <script src="../static/js/pagenation.js"></script>
+
+
+
+</body>
+
+</html>

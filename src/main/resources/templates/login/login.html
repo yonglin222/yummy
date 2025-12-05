@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link rel="stylesheet" href="../static/css/login.css">
+    <link rel="stylesheet" href="../static/css/modal.css">
+</head>
+
+<body>
+    <!-- 로그인 박스 -->
+    <div class="login-container">
+
+        <h2>로그인</h2>
+        <div class="underline"></div>
+        <form class="login-form">
+            <label for="email">이메일</label>
+            <input id="email" type="email" placeholder="이메일 입력">
+
+            <label for="password">비밀번호</label>
+            <input id="password" type="password" placeholder="비밀번호 입력">
+            <p class="msg" id="loginMsg"></p>
+        </form>
+        <div class="btn-wrap">
+            <a href="signup.html" class="register-btn">
+                <span class="text-expand">회원가입</span>
+            </a>
+            <button type="button" class="logins-btn">
+                <span class="text-expand">로그인</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="../static/js/login.js"></script>
+
+</body>
+
+</html>

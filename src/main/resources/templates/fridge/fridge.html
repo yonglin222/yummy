@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>나의 냉장고</title>
+    <link rel="stylesheet" href="/modules/static/css/fridge.css" />
+    <link rel="stylesheet" href="/modules/static/css/modal.css" />
+</head>
+
+<body>
+
+    <main class="page">
+        <section class="title-row">
+            <h2>나의 냉장고</h2>
+            <button id="deleteSelectedBtn" class="delete-selected-btn">
+                선택 재료 삭제
+            </button>
+        </section>
+
+        <section class="fridge-layout">
+            <!-- 왼쪽: 냉동고/냉장고 라벨 + 추가버튼 -->
+            <div class="fridge-labels">
+                <div class="label-block">
+                    <div class="label-title">냉동고</div>
+                    <button class="add-ingredient-btn" data-category="freezer">
+                        재료 추가 ＋
+                    </button>
+                </div>
+                <div class="label-block">
+                    <div class="label-title">냉장고</div>
+                    <button class="add-ingredient-btn" data-category="fridge">
+                        재료 추가 ＋
+                    </button>
+                </div>
+            </div>
+
+            <!-- 중앙 냉장고 본체 -->
+            <div class="big-fridge">
+
+                <!-- 냉동고 영역 -->
+                <div class="fridge-section" data-category="freezer">
+                    <div class="section-body" id="freezerList"></div>
+                </div>
+
+                <!-- 냉장고 손잡이 -->
+                <div class="fridge-handle"></div>
+
+                <!-- 냉장고 영역 -->
+                <div class="fridge-section" data-category="fridge">
+                    <div class="section-body" id="fridgeList"></div>
+                </div>
+            </div>
+
+            <!-- 오른쪽: 상온 라벨 + 선반 -->
+            <div class="room-wrapper">
+                <div class="room-label">
+                    <div class="label-title">상온</div>
+                    <button class="add-ingredient-btn" data-category="room">
+                        재료 추가 ＋
+                    </button>
+                </div>
+
+                <div class="room-shelf">
+                    <div class="section-body" id="roomList">
+                    </div>
+                    <!-- 선반 손잡이 -->
+                    <div class="shelf-feet">
+                        <span></span><span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 레시피 불러오기 버튼 -->
+        <section class="bottom-area">
+            <button id="recipeBtn" class="recipe-btn">
+                → 이 재료로 할 수 있는 레시피 불러오기
+            </button>
+        </section>
+    </main>
+
+    <script src="/modules/static/js/fridge.js"></script>
+    <script src="/modules/static/js/modal.js"></script>
+</body>
+
+</html>
