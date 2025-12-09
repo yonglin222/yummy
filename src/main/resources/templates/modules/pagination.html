@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="paginationFragment">
+
+    <link rel="stylesheet" th:href="@{/css/pagenation.css}">
+
+    <div class="pagination" th:if="${totalPages > 0}">
+        
+        <button th:onclick="|location.href='@{/recipe/list(page=${currentPage - 1}, keyword=${keyword}, typeCatId=${selectedTypeCatId}, methodCatId=${selectedMethodCatId})}'|"
+                th:disabled="${currentPage == 1}">
+            〈
+        </button>
+
+        <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
+            <button th:text="${i}"
+                    th:classappend="${i == currentPage} ? 'active'"
+                    th:onclick="|location.href='@{/recipe/list(page=${i}, keyword=${keyword}, typeCatId=${selectedTypeCatId}, methodCatId=${selectedMethodCatId})}'|">
+                1
+            </button>
+        </th:block>
+
+        <button th:onclick="|location.href='@{/recipe/list(page=${currentPage + 1}, keyword=${keyword}, typeCatId=${selectedTypeCatId}, methodCatId=${selectedMethodCatId})}'|"
+                th:disabled="${currentPage == totalPages}">
+            〉
+        </button>
+        
+    </div>
+
+</th:block>
+</html>

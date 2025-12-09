@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Yummy - 즐겨찾기한 레시피</title>
+    
+    <link rel="stylesheet" th:href="@{/css/recipe_list.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* 프론트팀 요청: 타이틀 그라데이션 스타일 */
+        .page-title i {
+            background: linear-gradient(135deg, #fff2b3, #f7d774, #e3b54a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* 즐겨찾기 전용: 목록이 비었을 때 메시지 스타일 */
+        .empty-message {
+            text-align: center;
+            padding: 100px 0;
+            color: #888;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <th:block th:replace="~{modules/header :: headerFragment}"></th:block>
+
+    <div class="recipe-page">
+        
+        <div class="page-title">
+            <h2><i class="fa-solid fa-star"></i> 즐겨찾기한 레시피</h2>
+        </div>
+        <div class="underline"></div>
+
+        <div th:if="${searchMessage}" style="margin: 10px 0; color: #666; font-size: 14px;">
+            <i class="fa-solid fa-check"></i> <span th:text="${searchMessage}">나의 즐겨찾기 목록</span>
+        </div>
+
+        <div id="recipeListPage">
+            
+            <div th:if="${#lists.isEmpty(recipeList)}" class="empty-message">
+                <i class="fa-regular fa-folder-open" style="font-size: 40px; margin-bottom: 15px;"></i><br>
+                아직 즐겨찾기한 레시피가 없습니다.
+            </div>
+
+            <div th:unless="${#lists.isEmpty(recipeList)}" class="recipe-list" id="recipeList">
+                <div th:each="recipe : ${recipeList}" class="recipe-card" 
+                     th:attr="data-id=${recipe.recipeId}">
+                    
+                    <h3 th:text="${recipe.name}" style="margin: 0;">레시피 이름</h3>
+                
+                </div>
+            </div>
+
+            <th:block th:replace="~{modules/pagination :: paginationFragment(baseUrl='/recipe/favorites')}"></th:block>
+        </div>
+
+        <th:block th:replace="~{modules/recipe_detail :: recipeDetailFragment}"></th:block>
+
+    </div>
+
+
+    <th:block th:replace="~{modules/footer :: footerFragment}"></th:block>
+
+    <script th:src="@{/js/favorites.js}"></script>
+
+</body>
+</html>

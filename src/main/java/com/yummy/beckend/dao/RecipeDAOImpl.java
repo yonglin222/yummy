@@ -19,13 +19,13 @@ public class RecipeDAOImpl implements RecipeDAO {
     private static final String NAMESPACE = "Recipe-Mapper";
 
     @Override
-    public List<RecipeDto> findAll() throws SQLException {
-        return sqlSession.selectList(NAMESPACE + ".findAll");
+    public List<RecipeDto> selectRecipeList(Map<String, Object> params) throws SQLException {
+        return sqlSession.selectList(NAMESPACE + ".selectRecipeList", params);
     }
 
     @Override
-    public List<RecipeDto> findByNameKeyword(String keyword) throws SQLException {
-        return sqlSession.selectList(NAMESPACE + ".findByNameKeyword", keyword);
+    public int countRecipeList(Map<String, Object> params) throws SQLException {
+        return sqlSession.selectOne(NAMESPACE + ".countRecipeList", params);
     }
     
     @Override

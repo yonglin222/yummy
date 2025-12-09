@@ -1,34 +1,69 @@
 .modal-overlay {
-      display: none; /* 처음엔 숨김 */
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
+  display: none;
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
-    /* ===== 모달 박스 ===== */
-    .modal-box {
-      background: white;
-      padding: 24px 32px;
-      border-radius: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-      text-align: center;
-      width: 320px;
-    }
+/* 모달 박스를 flex 컨테이너로 만듦 */
+.modal-box {
+  display: flex;
+  flex-direction: column; /* 위→아래 배치 */
+  justify-content: center; /* 가운데 정렬 */
+  align-items: center;     /* 가운데 정렬 */
 
-    .modal-box h2 {
-      margin-bottom: 10px;
-    }
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  text-align: center;
+  width: 350px;
+  height: 220px;
+  font-size: 17px;
+}
 
-    .btn {
-      margin-top: 16px;
-      padding: 8px 18px;
-      background: #6BBD45;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+.modal-box h2 {
+  margin-bottom: 25px;
+  font-size: 22px;
+  font-weight: 600;
+
+}
+
+
+.modal-btn-group {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.modal-btn-group .btn {
+  padding: 15px 33px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.cancel-btn {
+  background: #e5e5e5;
+}
+.cancel-btn:hover {
+  background: #d9d9d9;
+}
+
+.confirm-btn {
+  background: #6BBD45;
+  color: white;
+  font-weight: 500;
+}
+
+.confirm-btn:hover {
+  background: #66ad46;
+  color: white;
+}

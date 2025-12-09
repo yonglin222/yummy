@@ -1,163 +1,171 @@
-$(document).ready(function() {
-    // 전역 상태 변수 (중복 확인 통과 여부)
-    let isNameChecked = false;
+document.addEventListener("DOMContentLoaded", () => {
+    // ========== DOM ELEMENTS ==========
+    const nicknameInput = document.getElementById("nickname");
+    const emailInput = document.getElementById("email");
+    const pwInput = document.getElementById("password");
+    const pwCheckInput = document.getElementById("passwordCheck");
+
+    const nicknameMsg = document.getElementById("nicknameMsg");
+    const emailMsg = document.getElementById("emailMsg");
+    const checkMsg = document.getElementById("checkMsg");
+    const pwMsg = document.getElementById("pwMsg");
+
+    const nicknameCheckBtn = document.querySelector(".nickname-check");
+    const emailCheckBtn = document.querySelector(".email-check");
+    
+    const registForm = document.getElementById("registForm");
+
+    // 상태 변수
+    let isNickChecked = false;
     let isEmailChecked = false;
 
-    // ========== 1. 닉네임 중복 확인 버튼 클릭 이벤트 ==========
-    $('.nickname-check').on('click', function() {
-        const name = $('#nickname').val().trim();
-        const msg = $('#nicknameMsg');
+    // 입력값 변경 시 중복확인 초기화
+    nicknameInput.addEventListener("input", () => { isNickChecked = false; nicknameMsg.textContent = ""; });
+    emailInput.addEventListener("input", () => { isEmailChecked = false; emailMsg.textContent = ""; });
 
-        if (!name) {
-            msg.text("닉네임을 입력해주세요.").css("color", "#d42e2e");
-            return;
-        }
-        // 닉네임 유효성 검사 (한글, 영문만 허용)
-        const nicknameRegex = /^[A-Za-z가-힣]+$/;
-        if (!nicknameRegex.test(name)) {
-            msg.text("닉네임은 한글 또는 영문만 사용할 수 있습니다.").css("color", "#d42e2e");
-            return;
-        }
-        if (name.length > 10) {
-            msg.text("닉네임은 10자 이하로 작성해주세요.").css("color", "#d42e2e");
+    // ========== 1. 닉네임 중복확인 (AJAX) ==========
+    nicknameCheckBtn.addEventListener("click", () => {
+        const nickname = nicknameInput.value.trim();
+        nicknameMsg.textContent = "";
+
+        if (!nickname) {
+            nicknameMsg.textContent = "닉네임을 입력해주세요.";
+            nicknameMsg.style.color = "#d42e2e";
             return;
         }
 
-        // 실제 서버 통신
+        const nicknameRegex = /^[A-Za-z가-힣]{2,10}$/; 
+        if (!nicknameRegex.test(nickname)) {
+            nicknameMsg.textContent = "닉네임은 2~10자의 한글, 영문만 가능합니다.";
+            nicknameMsg.style.color = "#d42e2e";
+            return;
+        }
+
         $.ajax({
-            url: '/user/nameCheck',
-            type: 'GET',
-            data: { name: name },
-            success: function(res) {
-                if(res === 'OK') {
-                    msg.text("사용 가능한 닉네임입니다.").css("color", "#3ca63c");
-                    isNameChecked = true;
+            type: "POST",
+            url: "/api/check-nickname",
+            data: { nickname: nickname },
+            success: function(response) {
+                if (response.available) {
+                    nicknameMsg.textContent = "사용 가능한 닉네임입니다.";
+                    nicknameMsg.style.color = "#3ca63c";
+                    isNickChecked = true;
                 } else {
-                    msg.text("이미 사용 중인 닉네임입니다.").css("color", "#d42e2e");
-                    isNameChecked = false;
+                    nicknameMsg.textContent = "이미 사용 중인 닉네임입니다.";
+                    nicknameMsg.style.color = "#d42e2e";
+                    isNickChecked = false;
                 }
             },
             error: function() {
-                alert("서버 통신 오류가 발생했습니다.");
+                // 알림창 대신 텍스트로 표시하거나 모달 사용 가능
+                nicknameMsg.textContent = "중복 확인 중 오류가 발생했습니다.";
+                nicknameMsg.style.color = "#d42e2e";
             }
         });
     });
 
-    // ========== 2. 이메일 중복 확인 버튼 클릭 이벤트 ==========
-    $('.email-check').on('click', function() {
-        const email = $('#email').val().trim();
-        const msg = $('#emailMsg');
+    // ========== 2. 이메일 중복확인 (AJAX) ==========
+    emailCheckBtn.addEventListener("click", () => {
+        const email = emailInput.value.trim();
+        emailMsg.textContent = "";
 
         if (!email) {
-            msg.text("이메일을 입력해주세요.").css("color", "#d42e2e");
-            return;
-        }
-        // 이메일 형식 검사
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            msg.text("올바른 이메일 형식이 아닙니다.").css("color", "#d42e2e");
+            emailMsg.textContent = "이메일을 입력해주세요.";
+            emailMsg.style.color = "#d42e2e";
             return;
         }
 
-        // 실제 서버 통신
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            emailMsg.textContent = "올바른 이메일 형식이 아닙니다.";
+            emailMsg.style.color = "#d42e2e";
+            return;
+        }
+
         $.ajax({
-            url: '/user/emailCheck',
-            type: 'GET',
+            type: "POST",
+            url: "/api/check-email",
             data: { email: email },
-            success: function(res) {
-                if(res === 'OK') {
-                    msg.text("사용 가능한 이메일입니다.").css("color", "#3ca63c");
+            success: function(isDuplicate) {
+                if (!isDuplicate) { 
+                    emailMsg.textContent = "사용 가능한 이메일입니다.";
+                    emailMsg.style.color = "#3ca63c";
                     isEmailChecked = true;
                 } else {
-                    msg.text("이미 사용 중인 이메일입니다.").css("color", "#d42e2e");
+                    emailMsg.textContent = "이미 사용 중인 이메일입니다.";
+                    emailMsg.style.color = "#d42e2e";
                     isEmailChecked = false;
                 }
             },
             error: function() {
-                alert("서버 통신 오류가 발생했습니다.");
+                emailMsg.textContent = "중복 확인 중 오류가 발생했습니다.";
+                emailMsg.style.color = "#d42e2e";
             }
         });
     });
 
-    // ========== 3. 비밀번호 실시간 검사 ==========
-    $('#password').on('input', function() {
-        const pw = $(this).val();
-        const msg = $('#checkMsg');
-        
-        // 비밀번호 정규식: 8~16자, 영문 소문자/숫자/특수문자 포함
+    // ========== 3. 비밀번호 유효성 검사 ==========
+    pwInput.addEventListener("input", validatePassword);
+    pwCheckInput.addEventListener("input", validatePassword);
+
+    function validatePassword() {
+        const pw = pwInput.value.trim();
+        const pwc = pwCheckInput.value.trim();
         const pwRegex = /^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,16}$/;
-        
+
         if (!pwRegex.test(pw)) {
-            msg.text("비밀번호는 8자~16자(영어 소문자,특수문자,숫자 각1개 이상)로 작성해주세요.").css("color", "#d42e2e");
+            checkMsg.textContent = "비밀번호는 8자~16자(영어 소문자,특수문자,숫자 각1개 이상)로 작성해주세요.";
+            checkMsg.style.color = "#d42e2e";
         } else {
-            msg.text("사용 가능한 비밀번호 형식입니다.").css("color", "#3ca63c");
+            checkMsg.textContent = "사용 가능한 비밀번호입니다.";
+            checkMsg.style.color = "#3ca63c";
         }
-        
-        // 비밀번호가 바뀌면 확인란도 다시 체크
-        $('#passwordCheck').trigger('input');
-    });
 
-    // ========== 4. 비밀번호 일치 확인 ==========
-    $('#passwordCheck').on('input', function() {
-        const pw = $('#password').val();
-        const pwc = $(this).val();
-        const msg = $('#pwMsg');
+        if (pwc) {
+            if (pw !== pwc) {
+                pwMsg.textContent = "비밀번호가 일치하지 않습니다.";
+                pwMsg.style.color = "#d42e2e";
+            } else {
+                pwMsg.textContent = "비밀번호가 일치합니다.";
+                pwMsg.style.color = "#3ca63c";
+            }
+        } else {
+            pwMsg.textContent = "";
+        }
+    }
 
-        if (!pwc) {
-            msg.text("");
+    // ========== 4. 회원가입 제출 (Submit) ==========
+    registForm.addEventListener("submit", (e) => {
+        e.preventDefault(); // 일단 정지
+
+        const pw = pwInput.value.trim();
+        const pwc = pwCheckInput.value.trim();
+        const pwRegex = /^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,16}$/;
+
+        // ▼▼▼ [수정] alert 대신 showAutoModal 사용 ▼▼▼
+
+        if (!isNickChecked) {
+            showAutoModal("닉네임 중복확인을 해주세요.");
+            return;
+        }
+
+        if (!isEmailChecked) {
+            showAutoModal("이메일 중복확인을 해주세요.");
+            return;
+        }
+
+        if (!pwRegex.test(pw)) {
+            showAutoModal("비밀번호 형식을 확인해주세요.");
             return;
         }
 
         if (pw !== pwc) {
-            msg.text("비밀번호가 일치하지 않습니다.").css("color", "#d42e2e");
-        } else {
-            msg.text("비밀번호가 일치합니다.").css("color", "#3ca63c");
+            showAutoModal("비밀번호가 일치하지 않습니다.");
+            return;
         }
-    });
 
-    // ========== 5. 입력값 변경 시 중복확인 초기화 ==========
-    $('#nickname').on('input', function() {
-        isNameChecked = false;
-        $('#nicknameMsg').text("");
-    });
-    $('#email').on('input', function() {
-        isEmailChecked = false;
-        $('#emailMsg').text("");
-    });
-
-    // ========== 6. 가입하기 버튼 클릭 (폼 제출 전 검증) ==========
-    $('#registForm').on('submit', function(e) {
-        // 닉네임 중복 확인 여부
-        if (!isNameChecked) {
-            alert("닉네임 중복 확인을 해주세요.");
-            e.preventDefault();
-            return false;
-        }
-        // 이메일 중복 확인 여부
-        if (!isEmailChecked) {
-            alert("이메일 중복 확인을 해주세요.");
-            e.preventDefault();
-            return false;
-        }
-        
-        // 비밀번호 일치 여부
-        const pw = $('#password').val();
-        const pwc = $('#passwordCheck').val();
-        if (pw !== pwc) {
-            alert("비밀번호가 일치하지 않습니다.");
-            e.preventDefault();
-            return false;
-        }
-        
-        // 정규식 최종 확인
-        const pwRegex = /^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,16}$/;
-        if (!pwRegex.test(pw)) {
-            alert("비밀번호 형식이 올바르지 않습니다.");
-            e.preventDefault();
-            return false;
-        }
-        
-        // 모든 검사 통과 시 폼 제출 진행 (서버로 전송)
-        return true;
+        // 모든 검사 통과 시 폼 제출
+        // (성공 시 모달은 필요 없고 바로 백엔드로 전송하여 처리)
+        registForm.submit();
     });
 });

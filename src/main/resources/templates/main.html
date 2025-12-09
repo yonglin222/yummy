@@ -16,8 +16,8 @@
 
 <body>
 
-  <th:block th:insert="~{modules/header :: headerFragment}" />
-
+  <th:block th:replace="~{modules/header :: headerFragment}"></th:block>
+  
   <main class="intro-container">
     <p class="intro-ask fade-up">오늘은 뭘 해먹어야 할까? 볶음밥? 김치찌개? 🤔</p>
 
@@ -40,8 +40,7 @@
     </div>
   </main>
 
-  <th:block th:insert="~{modules/footer :: footer-body}" />
-
+  <th:block th:replace="~{modules/footer :: footerFragment}"></th:block>
   <script th:src="@{/js/modal.js}"></script>
   <script th:src="@{/js/header.js}"></script>
 

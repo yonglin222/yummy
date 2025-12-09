@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Yummy - 분류별 레시피</title>
+    <link rel="stylesheet" th:href="@{/css/recipe_list.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <th:block th:replace="~{modules/header :: headerFragment}"></th:block>
+
+    <div class="recipe-page"> 
+        
+        <div class="page-title">
+            <h2><i class="fa-solid fa-clipboard-list"></i> 분류별 레시피</h2>
+        </div>
+        <div class="underline"></div>
+
+        <div class="filter-group"> 
+            <span class="filter-label">종류별:</span>
+            <div class="filter-buttons" id="categoryType">
+                <button class="filter-btn" type="button" data-type-id="0"
+                        th:classappend="${selectedTypeCatId == 0} ? 'active'">전체</button>
+                <th:block th:each="cat : ${typeCategories}">
+                    <button class="filter-btn" type="button" 
+                            th:text="${cat.name}" 
+                            th:attr="data-type-id=${cat.id}"
+                            th:classappend="${selectedTypeCatId == cat.id} ? 'active'">밥/떡</button>
+                </th:block>
+            </div>
+        </div> 
+
+        <div class="filter-group"> 
+            <span class="filter-label">방법별:</span>
+            <div class="filter-buttons" id="categoryMethod">
+                <button class="filter-btn" type="button" data-method-id="0"
+                        th:classappend="${selectedMethodCatId == 0} ? 'active'">전체</button>
+                <th:block th:each="cat : ${methodCategories}">
+                    <button class="filter-btn" type="button" 
+                            th:text="${cat.name}" 
+                            th:attr="data-method-id=${cat.id}"
+                            th:classappend="${selectedMethodCatId == cat.id} ? 'active'">볶음</button>
+                </th:block>
+            </div>
+        </div>
+        <div class="underline"></div>
+
+        <div th:if="${searchMessage}" style="margin: 10px 0; color: #666; font-size: 14px;">
+            <i class="fa-solid fa-check"></i> <span th:text="${searchMessage}">결과 메시지</span>
+        </div>
+
+        <div id="recipeListPage">
+            
+            <div th:if="${#lists.isEmpty(recipeList)}" style="text-align:center; padding: 80px 0; color: #888;">
+                <i class="fa-regular fa-face-sad-tear" style="font-size: 40px; margin-bottom: 10px;"></i><br>
+                조건에 맞는 레시피가 없습니다.
+            </div>
+
+            <div th:unless="${#lists.isEmpty(recipeList)}" class="recipe-list" id="recipeList">
+                <div th:each="recipe : ${recipeList}" class="recipe-card" 
+                     th:attr="data-id=${recipe.recipeId}">
+                    <h3 th:text="${recipe.name}" style="margin: 0;">레시피 이름</h3>
+                </div>
+            </div>
+
+            <th:block th:replace="~{modules/pagination :: paginationFragment(baseUrl='/recipe/list')}"></th:block>
+        </div>
+
+        <th:block th:replace="~{modules/recipe_detail :: recipeDetailFragment}"></th:block>
+
+    </div>
+
+    <th:block th:replace="~{modules/footer :: footerFragment}"></th:block>
+
+    <script th:src="@{/js/recipe_list.js}"></script>
+
+</body>
+</html>

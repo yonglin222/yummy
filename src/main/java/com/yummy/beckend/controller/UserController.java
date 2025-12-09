@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.yummy.beckend.dto.UserDto;
@@ -26,47 +25,30 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.sql.SQLException;
 
-@Tag(name = "1. 회원 관리", description = "회원가입, 로그인, 중복 체크 API")
-@Controller
+@Tag(name = "1. 회원 페이지", description = "회원가입/로그인 화면 이동 및 폼 전송")
+@Controller // [중요] @RestController가 아니라 @Controller여야 합니다.
 @RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @Operation(summary = "회원가입 페이지 이동", description = "회원가입 HTML 폼을 반환합니다.")
+    // ==========================================
+    // 1. 회원가입 관련
+    // ==========================================
+
+    @Operation(summary = "회원가입 페이지 이동")
     @GetMapping("/registForm")
     public String registForm(@ModelAttribute("userDto") UserDto userDto) {
+        // templates/user/signup.html 파일을 보여줌
         return "user/signup"; 
     }
 
-    @Operation(summary = "닉네임 중복 확인 (AJAX)", description = "사용 가능한 닉네임인지 확인합니다. (return: OK / DUPLICATED)")
-    @GetMapping("/nameCheck")
-    @ResponseBody
-    public String nameCheck(@Parameter(description = "확인할 닉네임") String name) throws SQLException {
-        int count = userService.checkName(name);
-        if (count > 0) {
-            return "DUPLICATED"; 
-        }
-        return "OK"; 
-    }
-
-    @Operation(summary = "이메일 중복 확인 (AJAX)", description = "사용 가능한 이메일인지 확인합니다. (return: OK / DUPLICATED)")
-    @GetMapping("/emailCheck")
-    @ResponseBody
-    public String emailCheck(@Parameter(description = "확인할 이메일") String email) throws SQLException {
-        int count = userService.checkEmail(email);
-        if (count > 0) {
-            return "DUPLICATED";
-        }
-        return "OK";
-    }
-
-    @Operation(summary = "회원가입 요청", description = "회원 정보를 등록하고 로그인 페이지로 리다이렉트합니다.")
+    @Operation(summary = "회원가입 요청 처리")
     @PostMapping("/regist")
     public String regist(@Valid @ModelAttribute("userDto") UserDto userDto, 
-                         @Parameter(hidden = true) BindingResult result,
-                         @Parameter(hidden = true) RedirectAttributes rttr) throws Exception {
+                         BindingResult result,
+                         RedirectAttributes rttr) {
 
         if (result.hasErrors()) {
             return "user/signup";
@@ -74,34 +56,38 @@ public class UserController {
 
         try {
             userService.regist(userDto);
-            rttr.addFlashAttribute("message", "환영합니다! 회원가입이 성공적으로 완료되었습니다. 로그인해주세요.");
             return "redirect:/user/loginForm";
 
         } catch (DuplicateEmailException e) {
-            result.rejectValue("email", "duplicate.email", e.getMessage());
+            result.rejectValue("email", "duplicate", e.getMessage());
             return "user/signup";
         } catch (DuplicateNameException e) {
-            result.rejectValue("name", "duplicate.name", e.getMessage());
+            result.rejectValue("name", "duplicate", e.getMessage());
             return "user/signup";
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            rttr.addFlashAttribute("message", "서버 오류가 발생했습니다. 관리자에게 문의하세요.");
+            rttr.addFlashAttribute("message", "서버 오류가 발생했습니다.");
             return "redirect:/user/registForm";
         }
     }
 
-    @Operation(summary = "로그인 페이지 이동", description = "로그인 HTML 폼을 반환합니다.")
-    @GetMapping("/loginForm")
+    // ==========================================
+    // 2. 로그인 관련
+    // ==========================================
+
+    @Operation(summary = "로그인 페이지 이동")
+    @GetMapping("/loginForm") // [중요] 이 매핑이 있어야 404 에러가 해결됩니다!
     public String loginForm(@ModelAttribute("userDto") UserDto userDto) {
+        // templates/user/login.html 파일을 보여줌
         return "user/login";
     }
 
-    @Operation(summary = "로그인 요청", description = "로그인을 처리하고 세션을 생성합니다.")
+    @Operation(summary = "로그인 요청 처리")
     @PostMapping("/login")
     public String login(@Parameter(description = "이메일") String email, 
                         @Parameter(description = "비밀번호") String password, 
-                        @Parameter(hidden = true) HttpSession session, 
-                        @Parameter(hidden = true) RedirectAttributes rttr) throws SQLException {
+                        HttpSession session, 
+                        RedirectAttributes rttr) throws SQLException {
         
         try {
             UserDto loginUser = userService.login(email, password);
@@ -124,10 +110,9 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "로그아웃", description = "세션을 만료시키고 메인 페이지로 이동합니다.")
+    @Operation(summary = "로그아웃")
     @GetMapping("/logout")
-    public String logout(@Parameter(hidden = true) HttpSession session, 
-                         @Parameter(hidden = true) RedirectAttributes rttr) {
+    public String logout(HttpSession session, RedirectAttributes rttr) {
         session.invalidate();
         rttr.addFlashAttribute("message", "로그아웃 되었습니다.");
         return "redirect:/";

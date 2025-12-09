@@ -1,462 +1,85 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Yummy - 나의 냉장고</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <style>
-        body { font-family: 'Noto Sans KR', sans-serif; padding: 20px; background-color: #f9f9f9; }
-        
-        h2 { text-align: center; margin-bottom: 30px; color: #333; }
-
-        /* 컨테이너 */
-        .fridge-container { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 20px; 
-            justify-content: center;
-        }
-        
-        /* 섹션 카드 디자인 (깔끔한 흰색 박스) */
-        .fridge-section {
-            flex: 1;
-            min-width: 320px;
-            max-width: 450px;
-            border: 1px solid #e1e1e1;
-            border-radius: 12px;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            /* 높이 제한을 두어 스크롤 생기게 */
-            max-height: 800px;
-        }
-
-        /* 섹션 헤더 */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        .section-title { font-size: 1.2em; font-weight: bold; color: #333; display: flex; align-items: center; gap: 5px; }
-        .count-badge { background: #eee; padding: 2px 8px; border-radius: 10px; font-size: 0.8em; color: #555; }
-        
-        .bulk-del-btn {
-            background-color: #ffcccc;
-            color: #d63031;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8em;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .bulk-del-btn:hover { background-color: #ffb3b3; }
-
-        /* 입력 영역 */
-        .input-area {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 15px;
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        .input-name { flex: 2; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        .input-date { flex: 1.2; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.85em; }
-        .btn-add {
-            background-color: #00b894;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 0 12px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .btn-add:hover { background-color: #00a884; }
-
-        /* 리스트 영역 */
-        .list-area { 
-            flex-grow: 1; 
-            overflow-y: auto; /* 내용 많으면 스크롤 */
-            padding-right: 5px;
-        }
-
-        .ingredient-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 5px;
-            border-bottom: 1px solid #f1f1f1;
-            transition: background 0.2s;
-        }
-        .ingredient-item:hover { background-color: #fafafa; }
-        .ingredient-item:last-child { border-bottom: none; }
-        
-        .chk-box { margin-right: 10px; transform: scale(1.2); cursor: pointer; }
-        
-        .item-info { flex-grow: 1; display: flex; flex-direction: column; width: 100%; }
-        
-        /* 이름 입력창 스타일 (평소엔 텍스트처럼) */
-        .edit-name-input {
-            border: 1px solid transparent;
-            background: transparent;
-            font-weight: bold;
-            font-size: 1.05em;
-            color: #333;
-            width: 95%;
-            padding: 2px;
-            margin-bottom: 2px;
-            border-radius: 4px;
-        }
-        .edit-name-input:hover { background-color: #f0f0f0; }
-        .edit-name-input:focus { background-color: #fff; border: 1px solid #00b894; outline: none; }
-
-        /* 날짜 입력창 스타일 */
-        .item-date-wrapper { display: flex; align-items: center; gap: 5px; font-size: 0.85em; color: #666; }
-        
-        .edit-date-input {
-            border: 1px solid transparent;
-            background: transparent;
-            font-family: inherit;
-            color: #666;
-            cursor: pointer;
-            padding: 2px;
-            border-radius: 4px;
-            width: 120px;
-        }
-        .edit-date-input:hover { background-color: #f0f0f0; }
-        .edit-date-input:focus { border: 1px solid #007bff; background-color: #fff; outline: none; }
-        
-        /* 유통기한 없음 스타일 */
-        .no-expiry-style {
-            color: #2ecc71;
-            font-weight: bold;
-            letter-spacing: -0.5px;
-        }
-
-        /* D-day 경고 색상 */
-        .warning { color: #d63031; font-weight: bold; font-size: 0.9em; }
-
-        /* 개별 삭제 버튼 */
-        .btn-del-item {
-            background: none;
-            border: none;
-            color: #ccc;
-            font-size: 1.2em;
-            cursor: pointer;
-            padding: 0 5px;
-            margin-left: 5px;
-        }
-        .btn-del-item:hover { color: #ff4d4d; }
-
-        .check-all-label { font-size: 0.8em; display: flex; align-items: center; gap: 3px; cursor: pointer; user-select: none;}
-    </style>
+    <link rel="stylesheet" th:href="@{/css/fridge-list.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
-    <th:block th:insert="~{modules/header :: headerFragment}" />
+    <th:block th:replace="~{modules/header :: headerFragment}"></th:block>
 
-    <h2>🥦 나의 냉장고</h2>
+    <main class="page">
+        <section class="title-row">
+            <h2><i class="fa-solid fa-snowflake" style="color:#6BBD45; margin-right:10px;"></i>나의 냉장고</h2>
+            <button id="deleteSelectedBtn" class="delete-selected-btn">
+                <i class="fa-solid fa-trash"></i> 선택 재료 삭제
+            </button>
+        </section>
 
-    <div class="fridge-container">
-        
-        <div class="fridge-section" id="section-cold">
-            <div class="section-header">
-                <div class="section-title">
-                    ❄️ 냉장 <span class="count-badge" id="count-냉장">0</span>
+        <section class="fridge-layout">
+            <div class="fridge-labels">
+                <div class="label-block">
+                    <div class="label-title">냉동고</div>
+                    <button class="add-ingredient-btn" data-category="freezer">
+                        재료 추가 ＋
+                    </button>
                 </div>
-                <div>
-                    <label class="check-all-label">
-                        <input type="checkbox" class="chk-all" data-target="list-cold"> 전체
-                    </label>
-                    <button type="button" class="bulk-del-btn" onclick="deleteSelected('list-cold')">선택 삭제</button>
-                </div>
-            </div>
-            
-            <div class="input-area">
-                <input type="text" class="input-name" id="name-냉장" placeholder="재료 입력 (Enter)" onkeydown="checkEnter(event, '냉장', 'name-냉장', 'date-냉장')">
-                <input type="date" class="input-date" id="date-냉장">
-                <button type="button" class="btn-add" onclick="registIngredient('냉장', 'name-냉장', 'date-냉장')">+</button>
-            </div>
-
-            <div class="list-area" id="list-cold"></div>
-        </div>
-
-        <div class="fridge-section" id="section-frozen">
-            <div class="section-header">
-                <div class="section-title">
-                    🧊 냉동 <span class="count-badge" id="count-냉동">0</span>
-                </div>
-                <div>
-                    <label class="check-all-label">
-                        <input type="checkbox" class="chk-all" data-target="list-frozen"> 전체
-                    </label>
-                    <button type="button" class="bulk-del-btn" onclick="deleteSelected('list-frozen')">선택 삭제</button>
+                <div class="label-block">
+                    <div class="label-title">냉장고</div>
+                    <button class="add-ingredient-btn" data-category="fridge">
+                        재료 추가 ＋
+                    </button>
                 </div>
             </div>
 
-            <div class="input-area">
-                <input type="text" class="input-name" id="name-냉동" placeholder="재료 입력 (Enter)" onkeydown="checkEnter(event, '냉동', 'name-냉동', 'date-냉동')">
-                <input type="date" class="input-date" id="date-냉동">
-                <button type="button" class="btn-add" onclick="registIngredient('냉동', 'name-냉동', 'date-냉동')">+</button>
-            </div>
-
-            <div class="list-area" id="list-frozen"></div>
-        </div>
-
-        <div class="fridge-section" id="section-room">
-            <div class="section-header">
-                <div class="section-title">
-                    🏠 상온 <span class="count-badge" id="count-상온">0</span>
-                </div>
-                <div>
-                    <label class="check-all-label">
-                        <input type="checkbox" class="chk-all" data-target="list-room"> 전체
-                    </label>
-                    <button type="button" class="bulk-del-btn" onclick="deleteSelected('list-room')">선택 삭제</button>
-                </div>
-            </div>
-
-            <div class="input-area">
-                <input type="text" class="input-name" id="name-상온" placeholder="재료 입력 (Enter)" onkeydown="checkEnter(event, '상온', 'name-상온', 'date-상온')">
-                <input type="date" class="input-date" id="date-상온">
-                <button type="button" class="btn-add" onclick="registIngredient('상온', 'name-상온', 'date-상온')">+</button>
-            </div>
-
-            <div class="list-area" id="list-room"></div>
-        </div>
-
-    </div>
-
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-
-        $(document).ready(function() {
-            loadFridgeData(); 
-
-            // 전체 선택 이벤트
-            $('.chk-all').on('change', function() {
-                const targetListId = $(this).data('target');
-                const isChecked = $(this).is(':checked');
-                $(`#${targetListId} .chk-box`).prop('checked', isChecked);
-            });
-        });
-
-        // 엔터키 입력 감지
-        function checkEnter(event, category, nameId, dateId) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                registIngredient(category, nameId, dateId);
-            }
-        }
-
-        // 재료 등록
-        function registIngredient(category, nameId, dateId) {
-            const nameInput = $('#' + nameId);
-            const dateInput = $('#' + dateId);
-            const ingredient = nameInput.val();
-            const expirationDate = dateInput.val();
-
-            if (!ingredient.trim()) {
-                nameInput.focus();
-                return;
-            }
-
-            $.ajax({
-                url: '/fridge/registAjax',
-                type: 'POST',
-                data: {
-                    ingredient: ingredient,
-                    category: category,
-                    expirationDate: expirationDate
-                },
-                success: function(response) {
-                    if (response.status === 'OK') {
-                        nameInput.val('');
-                        // dateInput.val(''); // 날짜는 그대로 둠 (연속입력 편의)
-                        nameInput.focus();
-                        loadFridgeData();
-                    } else {
-                        alert(response.message);
-                    }
-                },
-                error: function() { alert("저장 중 오류가 발생했습니다."); }
-            });
-        }
-
-        // 목록 조회
-        function loadFridgeData() {
-            $.ajax({
-                url: '/fridge/data',
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    renderAllLists(data);
-                },
-                error: function() { console.error('데이터 로드 실패'); }
-            });
-        }
-
-        function renderAllLists(data) {
-            $('#list-cold, #list-frozen, #list-room').empty();
-            $('.chk-all').prop('checked', false);
-
-            let cntCold = 0, cntFrozen = 0, cntRoom = 0;
-
-            if (data && data.length > 0) {
-                data.forEach(function(item) {
-                    let targetId = '';
-                    if (item.category === '냉장') { targetId = '#list-cold'; cntCold++; }
-                    else if (item.category === '냉동') { targetId = '#list-frozen'; cntFrozen++; }
-                    else { targetId = '#list-room'; cntRoom++; }
-
-                    // 날짜가 null이면 '유통기한 없음' 표시 로직
-                    let inputType = item.expirationDate ? 'date' : 'text';
-                    let inputValue = item.expirationDate ? item.expirationDate : '유통기한 없음';
-                    let inputClass = item.expirationDate ? '' : 'no-expiry-style';
-
-                    let ddayHtml = '';
-                    if (item.expirationDate && item.dday !== null) {
-                        if (item.dday < 0) ddayHtml = `<span class="warning">D+${Math.abs(item.dday)}</span>`;
-                        else if (item.dday === 0) ddayHtml = `<span class="warning">오늘 만료</span>`;
-                        else if (item.dday <= 3) ddayHtml = `<span class="warning">D-${item.dday}</span>`;
-                        else ddayHtml = `D-${item.dday}`;
-                    }
-
-                    // HTML 생성
-                    let html = `
-                        <div class="ingredient-item">
-                            <input type="checkbox" class="chk-box" value="${item.id}">
-                            
-                            <div class="item-info">
-                                <input type="text" class="edit-name-input" 
-                                       id="name-${item.id}"
-                                       value="${item.ingredient}"
-                                       onchange="updateItem(${item.id}, '${item.category}')">
-                                
-                                <div class="item-date-wrapper">
-                                    <input type="${inputType}" 
-                                           class="edit-date-input ${inputClass}" 
-                                           id="date-${item.id}"
-                                           value="${inputValue}" 
-                                           onfocus="onDateFocus(this)" 
-                                           onblur="onDateBlur(this)"
-                                           onchange="updateItem(${item.id}, '${item.category}')">
-                                    ${ddayHtml}
-                                </div>
-                            </div>
-                            
-                            <button type="button" class="btn-del-item" onclick="removeOne(${item.id})">×</button>
+            <div class="big-fridge">
+                <div class="fridge-section" data-category="freezer">
+                    <div class="section-body" id="freezerList">
                         </div>
-                    `;
-                    $(targetId).append(html);
-                });
-            }
+                </div>
 
-            $('#count-냉장').text(cntCold);
-            $('#count-냉동').text(cntFrozen);
-            $('#count-상온').text(cntRoom);
-        }
+                <div class="fridge-handle"></div>
 
-        // 포커스 시: 날짜 입력창으로 변환
-        function onDateFocus(input) {
-            input.type = 'date';
-            if (input.value === '유통기한 없음') {
-                input.value = ''; 
-                input.classList.remove('no-expiry-style');
-            }
-        }
+                <div class="fridge-section" data-category="fridge">
+                    <div class="section-body" id="fridgeList">
+                        </div>
+                </div>
+            </div>
 
-        // 포커스 해제 시: 비어있으면 텍스트로 변환
-        function onDateBlur(input) {
-            if (!input.value) {
-                input.type = 'text';
-                input.value = '유통기한 없음';
-                input.classList.add('no-expiry-style');
-            }
-        }
+            <div class="room-wrapper">
+                <div class="room-label">
+                    <div class="label-title">상온</div>
+                    <button class="add-ingredient-btn" data-category="room">
+                        재료 추가 ＋
+                    </button>
+                </div>
 
-        // 수정 (이름 또는 날짜)
-        function updateItem(id, category) {
-            const newName = $('#name-' + id).val();
-            let newDate = $('#date-' + id).val();
+                <div class="room-shelf">
+                    <div class="section-body" id="roomList">
+                        </div>
+                    <div class="shelf-feet">
+                        <span></span><span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            if (newDate === '유통기한 없음') {
-                newDate = '';
-            }
+        <section class="bottom-area">
+            <button id="recipeBtn" class="recipe-btn">
+                → 이 재료로 할 수 있는 레시피 불러오기
+            </button>
+        </section>
+    </main>
 
-            if (!newName.trim()) {
-                alert("재료명은 비워둘 수 없습니다.");
-                loadFridgeData();
-                return;
-            }
+    <th:block th:replace="~{modules/footer :: footerFragment}"></th:block>
 
-            $.ajax({
-                url: '/fridge/modifyAjax',
-                type: 'POST',
-                data: {
-                    id: id,
-                    ingredient: newName,
-                    category: category,
-                    expirationDate: newDate
-                },
-                success: function(response) {
-                    if (response.status === 'OK') {
-                        loadFridgeData();
-                    } else {
-                        alert("수정 실패: " + response.message);
-                        loadFridgeData();
-                    }
-                },
-                error: function() {
-                    alert("수정 중 오류가 발생했습니다.");
-                    loadFridgeData();
-                }
-            });
-        }
+    <script th:src="@{/js/modal.js}"></script>
+    
+    <script th:src="@{/js/fridge-list.js}"></script>
 
-        // 개별 삭제
-        function removeOne(id) {
-            $.ajax({
-                url: '/fridge/removeAjax',
-                type: 'POST',
-                data: { id: id },
-                success: function(response) {
-                    if (response.status === 'OK') loadFridgeData();
-                    else alert(response.message);
-                }
-            });
-        }
-
-        // 선택 삭제
-        function deleteSelected(listId) {
-            const checkedIds = $(`#${listId} .chk-box:checked`).map(function() {
-                return $(this).val();
-            }).get();
-
-            if (checkedIds.length === 0) {
-                alert("삭제할 재료를 선택해주세요.");
-                return;
-            }
-
-            $.ajax({
-                url: '/fridge/removeMultipleAjax',
-                type: 'POST',
-                data: { ids: checkedIds },
-                success: function(response) {
-                    if (response.status === 'OK') loadFridgeData();
-                    else alert(response.message);
-                },
-                error: function() { alert("삭제 중 오류가 발생했습니다."); }
-            });
-        }
-
-        /*]]>*/
-    </script>
 </body>
 </html>

@@ -4,9 +4,51 @@
 
 <mapper namespace="Recipe-Mapper"> 
 
-    <sql id="selectRecipeListColumns">
-        r.RECIPE_ID, r.NAME, r.SERVING, r.TIME, r.INGREDIENT, r.SPICY_INGREDIENT
+    <sql id="searchConditions">
+        <if test="typeCatId != null and typeCatId != 0">
+            INNER JOIN RECIPE_TYPE_CATEGORY rtc ON r.RECIPE_ID = rtc.RECIPE_ID
+        </if>
+        <if test="methodCatId != null and methodCatId != 0">
+            INNER JOIN RECIPE_METHOD_CATEGORY rmc ON r.RECIPE_ID = rmc.RECIPE_ID
+        </if>
+        WHERE 1=1
+        <if test="typeCatId != null and typeCatId != 0">
+            AND rtc.TYPE_ID = #{typeCatId}
+        </if>
+        <if test="methodCatId != null and methodCatId != 0">
+            AND rmc.METHOD_ID = #{methodCatId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND r.NAME LIKE '%' || #{keyword} || '%'
+        </if>
     </sql>
+
+    <select id="selectRecipeList" parameterType="map" resultType="com.yummy.beckend.dto.RecipeDto">
+        SELECT * FROM (
+            SELECT 
+                ROWNUM AS rn, A.* FROM (
+                SELECT DISTINCT
+                    r.RECIPE_ID, 
+                    r.NAME, 
+                    r.SERVING, 
+                    r.TIME, 
+                    r.INGREDIENT, 
+                    r.SPICY_INGREDIENT
+                FROM RECIPE r
+                <include refid="searchConditions"/> ORDER BY r.RECIPE_ID DESC
+            ) A
+            <![CDATA[
+            WHERE ROWNUM <= #{endRow}
+            ]]>
+        )
+        WHERE rn > #{startRow}
+    </select>
+
+    <select id="countRecipeList" parameterType="map" resultType="int">
+        SELECT COUNT(DISTINCT r.RECIPE_ID)
+        FROM RECIPE r
+        <include refid="searchConditions"/>
+    </select>
 
     <sql id="selectRecipeDetailColumns">
         r.RECIPE_ID, r.NAME, r.SERVING, r.TIME, r.INGREDIENT, r.SPICY_INGREDIENT, r.METHOD
@@ -15,21 +57,7 @@
     <sql id="checkFavorite">
         (SELECT COUNT(*) FROM FAVORITES fav WHERE fav.RECIPE_ID = r.RECIPE_ID AND fav.USER_ID = #{userId, jdbcType=NUMERIC})
     </sql>
-    
-    <select id="findAll" resultType="com.yummy.beckend.dto.RecipeDto">
-        SELECT
-            <include refid="selectRecipeListColumns"/>
-        FROM RECIPE r
-        ORDER BY r.RECIPE_ID
-    </select>
 
-    <select id="findByNameKeyword" parameterType="String" resultType="com.yummy.beckend.dto.RecipeDto">
-        SELECT
-            <include refid="selectRecipeListColumns"/> 
-        FROM RECIPE r
-        WHERE r.NAME LIKE '%' || #{keyword} || '%'
-    </select>
-    
     <select id="findById" parameterType="map" resultType="com.yummy.beckend.dto.RecipeDto">
         SELECT
             <include refid="selectRecipeDetailColumns"/>,
@@ -57,28 +85,23 @@
     </select>
 
     <insert id="insertFavorite" parameterType="map">
-        INSERT INTO FAVORITES (ID, USER_ID, RECIPE_ID)
-        VALUES (FAVORITES_SEQ.NEXTVAL, #{userId}, #{recipeId})
+        INSERT INTO FAVORITES (ID, USER_ID, RECIPE_ID) VALUES (FAVORITES_SEQ.NEXTVAL, #{userId}, #{recipeId})
     </insert>
 
     <delete id="deleteFavorite" parameterType="map">
-        DELETE FROM FAVORITES
-        WHERE USER_ID = #{userId} AND RECIPE_ID = #{recipeId}
+        DELETE FROM FAVORITES WHERE USER_ID = #{userId} AND RECIPE_ID = #{recipeId}
     </delete>
 
     <select id="countFavorite" parameterType="map" resultType="int">
-        SELECT COUNT(*)
-        FROM FAVORITES
-        WHERE USER_ID = #{userId} AND RECIPE_ID = #{recipeId}
+        SELECT COUNT(*) FROM FAVORITES WHERE USER_ID = #{userId} AND RECIPE_ID = #{recipeId}
     </select>
     
     <select id="findFavoritesByUserId" parameterType="long" resultType="com.yummy.beckend.dto.RecipeDto">
-        SELECT
-            <include refid="selectRecipeListColumns"/>,
-            1 AS ISFAVORITE
+        SELECT r.RECIPE_ID, r.NAME, r.SERVING, r.TIME, r.INGREDIENT, r.SPICY_INGREDIENT, 1 AS ISFAVORITE
         FROM RECIPE r
         JOIN FAVORITES f ON r.RECIPE_ID = f.RECIPE_ID
         WHERE f.USER_ID = #{userId}
         ORDER BY f.ID DESC
     </select>
+
 </mapper>

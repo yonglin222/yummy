@@ -7,6 +7,11 @@ import java.util.List;
 
 public interface RecipeService {
 
+    // 통합 조회
+    List<RecipeDto> getRecipeList(int page, int pageSize, String keyword, Long typeCatId, Long methodCatId) throws SQLException;
+    // 전체 개수 조회
+    int getRecipeCount(String keyword, Long typeCatId, Long methodCatId) throws SQLException;
+
     // 키워드 검색
     List<RecipeDto> searchRecipes(String keyword) throws SQLException;
     

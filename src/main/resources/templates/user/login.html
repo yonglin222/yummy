@@ -13,7 +13,7 @@
 
 <body>
 
-    <th:block th:insert="~{modules/header :: headerFragment}" />
+    <th:block th:replace="~{modules/header :: headerFragment}" />
 
     <div class="login-container">
 
@@ -45,11 +45,9 @@
 
     </div>
 
-    <th:block th:insert="~{modules/footer :: footer-body}" />
+    <th:block th:replace="~{modules/footer :: footerFragment}" />
 
-    <script th:src="@{/js/modal.js}"></script>
     <script th:src="@{/js/header.js}"></script>
-
     <script th:src="@{/js/login.js}"></script>
 
 </body>

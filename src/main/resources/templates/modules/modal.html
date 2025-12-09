@@ -1,15 +1,23 @@
-<!-- modules/templates/modal.html -->
-<div class="modal-overlay" id="modal">
-  <div class="modal-box">
-    <h2>알림</h2>
-    <p id="modal-message">알람 내용</p>
-    <button class="btn" id="closeModalBtn">닫기</button>
-  </div>
-</div>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
-<button onclick="showModal('테스트 모달입니다')">모달 테스트</button>
+<th:block th:fragment="modalFragment">
 
+    <link rel="stylesheet" th:href="@{/css/modal.css}">
 
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <h2 id="modal-title">알림</h2>
+            <p id="modal-message">알람 내용</p>
 
-<link rel="stylesheet" href="../static/css/modal.css">
-<script src="../static/js/modal.js"></script>
+            <div class="modal-btn-group">
+                <button class="btn cancel-btn" id="modalCancelBtn">취소</button>
+                <button class="btn confirm-btn" id="modalConfirmBtn">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/modal.js}"></script>
+
+</th:block>
+</html>
