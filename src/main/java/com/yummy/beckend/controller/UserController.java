@@ -96,8 +96,6 @@ public class UserController {
             String prevPage = (String) session.getAttribute("prevPage");
             session.removeAttribute("prevPage");
 
-            rttr.addFlashAttribute("message", loginUser.getName() + "님, 환영합니다!");
-            
             if (prevPage != null && !prevPage.isEmpty()) {
                 return "redirect:" + prevPage; 
             } else {
@@ -105,7 +103,7 @@ public class UserController {
             }
 
         } catch (NotFoundUserException | InvalidCredentialsException e) {
-            rttr.addFlashAttribute("message", "이메일 또는 비밀번호가 올바르지 않습니다.");
+            // rttr.addFlashAttribute("message", "이메일 또는 비밀번호가 올바르지 않습니다.");
             return "redirect:/user/loginForm";
         }
     }
@@ -114,7 +112,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session, RedirectAttributes rttr) {
         session.invalidate();
-        rttr.addFlashAttribute("message", "로그아웃 되었습니다.");
+        // rttr.addFlashAttribute("message", "로그아웃 되었습니다.");
         return "redirect:/";
     }
 }
