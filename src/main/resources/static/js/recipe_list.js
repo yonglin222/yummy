@@ -178,6 +178,12 @@ function toggleFavorite(recipeId) {
         } else {
             alert(data.message);
         }
+
+        if (data.isFavorite) {
+                showAutoModal("즐겨찾기에 추가되었습니다");
+            } else {
+                showAutoModal("즐겨찾기에서 삭제되었습니다");
+            }
     })
     .catch(err => console.error(err));
 }

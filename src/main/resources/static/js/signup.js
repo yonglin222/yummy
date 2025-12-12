@@ -134,38 +134,48 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ========== 4. 회원가입 제출 (Submit) ==========
-    registForm.addEventListener("submit", (e) => {
-        e.preventDefault(); // 일단 정지
+      // ========== 4. 회원가입 제출 (Submit) ==========
+  registForm.addEventListener("submit", (e) => {
+    // 일단 제출을 막고 유효성 검사 진행
+    e.preventDefault();
 
-        const pw = pwInput.value.trim();
-        const pwc = pwCheckInput.value.trim();
-        const pwRegex = /^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,16}$/;
+    const pw = pwInput.value.trim();
+    const pwc = pwCheckInput.value.trim();
+    const pwRegex = /^(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,16}$/;
 
-        // ▼▼▼ [수정] alert 대신 showAutoModal 사용 ▼▼▼
+    // 유효성 검사
+    if (!isNickChecked) {
+      if (typeof showAutoModal === "function")
+        showAutoModal("닉네임 중복확인을 해주세요.");
+      return;
+    }
 
-        if (!isNickChecked) {
-            showAutoModal("닉네임 중복확인을 해주세요.");
-            return;
-        }
+    if (!isEmailChecked) {
+      if (typeof showAutoModal === "function")
+        showAutoModal("이메일 중복확인을 해주세요.");
+      else alert("이메일 중복확인을 해주세요.");
+      return;
+    }
 
-        if (!isEmailChecked) {
-            showAutoModal("이메일 중복확인을 해주세요.");
-            return;
-        }
+    if (!pwRegex.test(pw)) {
+      if (typeof showAutoModal === "function")
+        showAutoModal("비밀번호 형식을 확인해주세요.");
+      return;
+    }
 
-        if (!pwRegex.test(pw)) {
-            showAutoModal("비밀번호 형식을 확인해주세요.");
-            return;
-        }
+    if (pw !== pwc) {
+      if (typeof showAutoModal === "function")
+        showAutoModal("비밀번호가 일치하지 않습니다.");
+      return;
+    }
 
-        if (pw !== pwc) {
-            showAutoModal("비밀번호가 일치하지 않습니다.");
-            return;
-        }
-
-        // 모든 검사 통과 시 폼 제출
-        // (성공 시 모달은 필요 없고 바로 백엔드로 전송하여 처리)
+    // 모든 검사 통과 시 실제 폼 제출
+    if (typeof showAutoModal === "function") {
+      showAutoModal("회원가입이 완료되었습니다.");
+      
+      setTimeout(() => {
         registForm.submit();
-    });
+      }, 1200);
+    }
+  });
 });

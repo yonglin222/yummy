@@ -109,30 +109,33 @@ function renderList(elementId, data) {
 // API: 즐겨찾기 토글
 // ============================================
 function toggleFavorite(recipeId) {
-    fetch("/recipe/toggleFavorite", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `recipeId=${recipeId}`
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "UNAUTHORIZED") {
-            if (confirm(data.message)) {
-                window.location.href = data.redirectUrl;
-            }
-        } else if (data.status === "OK") {
-            updateFavoriteUI(data.isFavorite);
-            
-            // (선택사항) 즐겨찾기 목록 페이지이므로, 삭제 시 새로고침을 할지 물어보거나 UI 갱신
-            if (!data.isFavorite) {
-                 alert("즐겨찾기에서 삭제되었습니다. 목록 갱신을 위해 페이지를 새로고침합니다.");
-                 location.reload();
-            }
-        } else {
-            alert(data.message);
+  fetch("/recipe/toggleFavorite", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `recipeId=${recipeId}`,
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status === "UNAUTHORIZED") {
+        if (confirm(data.message)) {
+          window.location.href = data.redirectUrl;
         }
+      } else if (data.status === "OK") {
+        updateFavoriteUI(data.isFavorite);
+
+        // (선택사항) 즐겨찾기 목록 페이지이므로, 삭제 시 새로고침을 할지 물어보거나 UI 갱신
+        if (!data.isFavorite) {
+          showAutoModal("즐겨찾기에서 삭제되었습니다.");
+
+          setTimeout(() => {
+            location.reload();
+          }, 1200);
+        }
+      } else {
+        alert(data.message);
+      }
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 }
 
 function updateFavoriteUI(isActive) {
