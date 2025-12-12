@@ -169,39 +169,65 @@ function toggleFavorite(recipeId) {
     })
     .then(res => res.json())
     .then(data => {
+        // 1. 비로그인 상태일 때 (수정된 부분)
         if (data.status === "UNAUTHORIZED") {
-            if(confirm(data.message)) {
-                window.location.href = data.redirectUrl;
-            }
-        } else if (data.status === "OK") {
-            updateFavoriteUI(data.isFavorite);
-        } else {
-            alert(data.message);
-        }
+            
+            // showConfirmModal은 Promise를 반환하므로 .then()을 사용합니다.
+            showConfirmModal("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")
+                .then((result) => {
+                    // result가 true면 '확인' 버튼을 누른 것
+                    if (result) {
+                        window.location.href = "/user/loginForm"; 
+                    }
+                    // result가 false면(취소) 그냥 모달이 닫히고 아무 일도 안 일어남
+                });
 
-        if (data.isFavorite) {
+            return; // 아래 코드가 실행되지 않도록 여기서 함수 종료
+        } 
+        
+        // 2. 정상 처리되었을 때
+        else if (data.status === "OK") {
+            updateFavoriteUI(data.isFavorite);
+            
+            if (data.isFavorite) {
                 showAutoModal("즐겨찾기에 추가되었습니다");
             } else {
                 showAutoModal("즐겨찾기에서 삭제되었습니다");
             }
+        } 
+        
+        // 3. 그 외 에러
+        else {
+            alert(data.message);
+        }
     })
     .catch(err => console.error(err));
 }
-
+// ============================================
+// UI: 즐겨찾기 버튼 스타일 변경
+// ============================================
 function updateFavoriteUI(isActive) {
     const favBtn = document.getElementById("favoriteBtn");
+    
+    // 버튼이 없으면 에러 안 나게 리턴 (안전장치)
+    if (!favBtn) return;
+
     const textSpan = favBtn.querySelector(".text");
     const icon = favBtn.querySelector("i");
 
     if (isActive) {
+        // [즐겨찾기 된 상태]
         favBtn.classList.add("active");
-        textSpan.textContent = "즐겨찾기 추가됨";
-        icon.className = "fa-solid fa-star";
-        favBtn.dataset.hoverText = "즐겨찾기 삭제하기";
+        if (textSpan) textSpan.textContent = "즐겨찾기 추가됨";
+        if (icon) icon.className = "fa-solid fa-star";
+        
+        favBtn.dataset.hoverText = "즐겨찾기 삭제하기"; 
     } else {
+        // [즐겨찾기 안 된 상태]
         favBtn.classList.remove("active");
-        textSpan.textContent = "즐겨찾기";
-        icon.className = "fa-regular fa-star";
+        if (textSpan) textSpan.textContent = "즐겨찾기";
+        if (icon) icon.className = "fa-regular fa-star";
+        
         favBtn.dataset.hoverText = "즐겨찾기 추가하기";
     }
 }
