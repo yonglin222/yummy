@@ -92,6 +92,4 @@ public class FridgeServiceImpl implements FridgeService {
         // 일괄 삭제 호출
         fridgeDAO.deleteIngredients(userId, idList);
     }
-
-    
 }
