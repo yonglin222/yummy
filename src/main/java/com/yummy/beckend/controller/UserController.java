@@ -26,7 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.sql.SQLException;
 
 @Tag(name = "1. 회원 페이지", description = "회원가입/로그인 화면 이동 및 폼 전송")
-@Controller // [중요] @RestController가 아니라 @Controller여야 합니다.
+@Controller 
 @RequestMapping("/user")
 public class UserController {
 
@@ -40,7 +40,7 @@ public class UserController {
     @Operation(summary = "회원가입 페이지 이동")
     @GetMapping("/registForm")
     public String registForm(@ModelAttribute("userDto") UserDto userDto) {
-        // templates/user/signup.html 파일을 보여줌
+        // templates/user/signup.html
         return "user/signup"; 
     }
 
@@ -76,9 +76,9 @@ public class UserController {
     // ==========================================
 
     @Operation(summary = "로그인 페이지 이동")
-    @GetMapping("/loginForm") // [중요] 이 매핑이 있어야 404 에러가 해결됩니다!
+    @GetMapping("/loginForm")
     public String loginForm(@ModelAttribute("userDto") UserDto userDto) {
-        // templates/user/login.html 파일을 보여줌
+        // templates/user/login.html
         return "user/login";
     }
 
