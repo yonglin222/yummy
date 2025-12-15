@@ -19,7 +19,6 @@ import com.yummy.beckend.service.CategoryService;
 import com.yummy.beckend.service.RecipeService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.sql.SQLException;
@@ -92,7 +91,7 @@ public class RecipeController {
     }
 
     // ==========================================
-    // 2. 레시피 상세 (GET) -> 여기가 없으면 405 발생 가능
+    // 2. 레시피 상세 (GET)
     // ==========================================
     @Operation(summary = "레시피 상세 페이지")
     @GetMapping("/detail/{recipeId}")
@@ -149,12 +148,8 @@ public class RecipeController {
         return "recipe/favorites";
     }
 
-    // // ==========================================
-    // // 4. 즐겨찾기 토글 (POST) -> 주소창에 치면 안 됨 (버튼 클릭용)
-    // // ==========================================
-
     // ==========================================
-    // 4. 즐겨찾기 토글 (POST) -> 수정됨
+    // 4. 즐겨찾기 토글 (POST)
     // ==========================================
     @Operation(summary = "즐겨찾기 추가/삭제 (AJAX)")
     @PostMapping("/toggleFavorite")
@@ -165,7 +160,7 @@ public class RecipeController {
         Map<String, Object> response = new HashMap<>();
         Long userId = getUserId(session);
 
-        // [수정 포인트] : 로그인 안 된 상태
+        // 로그인 안 된 상태
         if (userId == null) {
             // 메시지와 리다이렉트 URL을 제거하고, 상태값만 명확히 전달
             response.put("status", "UNAUTHORIZED"); 
@@ -179,52 +174,20 @@ public class RecipeController {
 
             response.put("status", "OK");
             response.put("isFavorite", isFavorite);
-            // 성공 시 메시지도 굳이 필요 없다면 제거해도 되지만, 
-            // 토스트 팝업(잠깐 떴다 사라지는 알림)용으로 남겨두는 경우가 많습니다.
+            // 토스트 팝업(잠깐 떴다 사라지는 알림)용으로 남겨두는 경우가 많음
             response.put("message", isFavorite ? "즐겨찾기에 추가되었습니다." : "즐겨찾기에서 삭제되었습니다.");
             
         } catch (SQLException e) {
             e.printStackTrace();
             response.put("status", "ERROR");
-            // 에러 상황은 로그인이랑 다르므로 메시지를 남기는 것이 디버깅에 좋습니다.
+            // 에러 상황은 로그인이랑 다르므로 메시지를 남기는 것이 디버깅에 좋음
             response.put("message", "서버 오류가 발생했습니다.");
         }
         return response;
     }
-    // @Operation(summary = "즐겨찾기 추가/삭제 (AJAX)")
-    // @PostMapping("/toggleFavorite")
-    // @ResponseBody
-    // public Map<String, Object> toggleFavorite(@RequestParam("recipeId") Long recipeId,
-    //                                           HttpSession session,
-    //                                           HttpServletRequest request) {
-    //     Map<String, Object> response = new HashMap<>();
-    //     Long userId = getUserId(session);
-
-    //     if (userId == null) {
-    //         // 로그인 안 된 상태
-    //         response.put("status", "UNAUTHORIZED");
-    //         response.put("message", "로그인 후 이용 가능합니다.");
-    //         response.put("redirectUrl", "/user/loginForm");
-    //         return response;
-    //     }
-
-    //     try {
-    //         recipeService.toggleFavorite(userId, recipeId);
-    //         int currentCount = recipeService.countFavorite(userId, recipeId);
-    //         boolean isFavorite = currentCount > 0;
-
-    //         response.put("status", "OK");
-    //         response.put("isFavorite", isFavorite);
-    //         response.put("message", isFavorite ? "즐겨찾기에 추가되었습니다." : "즐겨찾기에서 삭제되었습니다.");
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //         response.put("status", "ERROR");
-    //         response.put("message", "서버 오류가 발생했습니다.");
-    //     }
-    //     return response;
-    // }
-// ==========================================
-    // [추가] 5. 레시피 상세 데이터 API (AJAX 모달용)
+    
+    // ==========================================
+    // 5. 레시피 상세 데이터 API (AJAX 모달용)
     // ==========================================
     @Operation(summary = "레시피 상세 데이터 조회 (JSON)")
     @ResponseBody

@@ -6,9 +6,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface CategoryService {
+
+    // 카테고리 목록 조회
     List<CategoryDto> getAllTypeCategories() throws SQLException;
     List<CategoryDto> getAllMethodCategories() throws SQLException;
     
     // 다중 필터링 메서드
-    List<RecipeDto> getRecipesByTypeAndMethod(Long typeCatId, Long methodCatId) throws SQLException;
+    // List<RecipeDto> getRecipesByTypeAndMethod(Long typeCatId, Long methodCatId) throws SQLException;
 }

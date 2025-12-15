@@ -25,9 +25,8 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDAO.findAllMethodCategories();
     }
     
-    @Override
-    public List<RecipeDto> getRecipesByTypeAndMethod(Long typeCatId, Long methodCatId) throws SQLException {
-        // DAO 호출 (XML에서 0인지 여부를 판단하여 4가지 케이스 처리)
-        return categoryDAO.findRecipesByTypeAndMethod(typeCatId, methodCatId);
-    }
+    // @Override
+    // public List<RecipeDto> getRecipesByTypeAndMethod(Long typeCatId, Long methodCatId) throws SQLException {
+    //     return categoryDAO.findRecipesByTypeAndMethod(typeCatId, methodCatId);
+    // }
 }

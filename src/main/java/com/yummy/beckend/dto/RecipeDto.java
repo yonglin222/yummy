@@ -18,11 +18,11 @@ public class RecipeDto {
     private String ingredient;
     private String spicyIngredient;
     private String method; 
-    
+    // 조리 순서
     private List<String> methodSteps; 
-    
+    // 카테고리
     private List<String> typeCategories;
     private List<String> methodCategories;
-    
+    // 즐겨찾기 여부
     private Boolean isFavorite = false;
 }

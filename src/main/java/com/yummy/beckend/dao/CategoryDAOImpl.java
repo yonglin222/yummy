@@ -17,7 +17,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Autowired
     private SqlSessionTemplate sqlSession;
 
-    private static final String NAMESPACE = "Category-Mapper"; // ⭐️ Namespace 확인
+    private static final String NAMESPACE = "Category-Mapper"; 
 
     @Override
     public List<CategoryDto> findAllTypeCategories() throws SQLException {
@@ -29,12 +29,11 @@ public class CategoryDAOImpl implements CategoryDAO {
         return sqlSession.selectList(NAMESPACE + ".findAllMethodCategories");
     }
     
-    @Override
-    public List<RecipeDto> findRecipesByTypeAndMethod(Long typeCatId, Long methodCatId) throws SQLException {
-        Map<String, Object> map = new HashMap<>();
-        map.put("typeCatId", typeCatId);
-        map.put("methodCatId", methodCatId);
-        // Category-Mapper의 쿼리 호출
-        return sqlSession.selectList(NAMESPACE + ".findRecipesByTypeAndMethod", map);
-    }
+    // @Override
+    // public List<RecipeDto> findRecipesByTypeAndMethod(Long typeCatId, Long methodCatId) throws SQLException {
+    //     Map<String, Object> map = new HashMap<>();
+    //     map.put("typeCatId", typeCatId);
+    //     map.put("methodCatId", methodCatId);
+    //     return sqlSession.selectList(NAMESPACE + ".findRecipesByTypeAndMethod", map);
+    // }
 }

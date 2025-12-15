@@ -18,7 +18,7 @@
         r.RECIPE_ID, r.NAME, r.SERVING, r.TIME, r.INGREDIENT, r.SPICY_INGREDIENT
     </sql>
 
-    <select id="findRecipesByTypeAndMethod" parameterType="map" resultType="com.yummy.beckend.dto.RecipeDto">
+    <!-- <select id="findRecipesByTypeAndMethod" parameterType="map" resultType="com.yummy.beckend.dto.RecipeDto">
         SELECT DISTINCT 
             <include refid="selectRecipeListColumns"/> 
         FROM RECIPE r
@@ -46,6 +46,6 @@
         </choose>
         
         ORDER BY r.RECIPE_ID
-    </select>
+    </select> -->
 
 </mapper>
