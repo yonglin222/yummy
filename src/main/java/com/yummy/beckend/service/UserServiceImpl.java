@@ -20,9 +20,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDAO userDAO;
 
+    // 비밀번호 암호화를 위한 PasswordEncoder 빈 주입
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // 회원 등록
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void regist(UserDto userDto) throws DuplicateEmailException, DuplicateNameException, SQLException {
@@ -45,6 +47,7 @@ public class UserServiceImpl implements UserService {
         userDAO.insertUser(userDto);
     }
 
+    // 로그인
     @Override
     public UserDto login(String email, String password) throws NotFoundUserException, InvalidCredentialsException, SQLException {
         UserDto member = userDAO.findByEmail(email);

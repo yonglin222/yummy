@@ -12,7 +12,6 @@ public class UserDAOImpl implements UserDAO {
     @Autowired
     private SqlSession sqlSession;
     
-    // MyBatis XML의 namespace와 일치해야 함
     private static final String NAMESPACE = "User-Mapper";
 
     @Override
@@ -33,10 +32,5 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public UserDto findByEmail(String email) throws SQLException {
         return sqlSession.selectOne(NAMESPACE + ".findByEmail", email);
-    }
-    
-    @Override
-    public void updateUser(UserDto userDto) throws SQLException {
-        // 추후 구현
     }
 }

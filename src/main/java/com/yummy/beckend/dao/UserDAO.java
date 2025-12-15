@@ -15,8 +15,5 @@ public interface UserDAO {
     int countByEmail(String email) throws SQLException;
 
     // 사용자 정보 조회
-    UserDto findByEmail(String email) throws SQLException;
-    
-    // 회원 수정
-    void updateUser(UserDto userDto) throws SQLException;
+    UserDto findByEmail(String email) throws SQLException;  
 }

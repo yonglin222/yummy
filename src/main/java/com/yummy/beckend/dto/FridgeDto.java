@@ -17,7 +17,6 @@ public class FridgeDto {
     private Long userId;
 
     @NotBlank(message = "재료명은 필수 입력 항목입니다.")
-    @Size(max = 100, message = "재료명은 100자 이하로 입력해야 합니다.")
     private String ingredient;
 
     @NotBlank(message = "보관 구분은 필수입니다.")

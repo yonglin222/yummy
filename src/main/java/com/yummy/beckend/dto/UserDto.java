@@ -15,9 +15,9 @@ public class UserDto {
 
     private Long id;
 
-    // A-1. 닉네임: 한글/영어 10글자 이하 (min=2는 유지 권장)
+    // A-1. 닉네임: 한글/영어 2장 이상 10글자 이하 
     @NotBlank(message = "닉네임은 필수 입력 항목입니다.")
-    @Size(min = 1, max = 10, message = "닉네임은 10자 이하로 입력해야 합니다.")
+    @Size(min = 2, max = 10, message = "닉네임은 2자 이상 10자 이하로 입력해야 합니다.")
     private String name; 
 
     // A-1. 아이디(이메일)

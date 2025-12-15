@@ -33,10 +33,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // ==========================================
     // 1. 회원가입 관련
-    // ==========================================
-
     @Operation(summary = "회원가입 페이지 이동")
     @GetMapping("/registForm")
     public String registForm(@ModelAttribute("userDto") UserDto userDto) {
@@ -84,6 +81,7 @@ public class UserController {
 
     @Operation(summary = "로그인 요청 처리")
     @PostMapping("/login")
+    // 이메일, 비밀번호, 세션, 리다이렉트 속성
     public String login(@Parameter(description = "이메일") String email, 
                         @Parameter(description = "비밀번호") String password, 
                         HttpSession session, 
@@ -92,17 +90,19 @@ public class UserController {
         try {
             UserDto loginUser = userService.login(email, password);
             session.setAttribute("loginUser", loginUser);
-
+            
             String prevPage = (String) session.getAttribute("prevPage");
             session.removeAttribute("prevPage");
-
+            // 이전 페이지가 있으면 그쪽으로, 없으면 메인으로
             if (prevPage != null && !prevPage.isEmpty()) {
                 return "redirect:" + prevPage; 
             } else {
                 return "redirect:/"; 
             }
-
-        } catch (NotFoundUserException | InvalidCredentialsException e) {
+            
+        } 
+        // 이메일 또는 비밀번호 오류 처리
+        catch (NotFoundUserException | InvalidCredentialsException e) {
             rttr.addFlashAttribute("message", "이메일 또는 비밀번호가 올바르지 않습니다.");
             return "redirect:/user/loginForm";
         }
