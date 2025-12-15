@@ -20,7 +20,7 @@ public class FridgeServiceImpl implements FridgeService {
     @Autowired
     private FridgeDAO fridgeDAO;
     
-    // 이 Service는 Session에서 받은 userId를 기반으로 작동합니다.
+    // 이 Service는 Session에서 받은 userId를 기반으로 작동
 
     @Override
     @Transactional(rollbackFor = SQLException.class)

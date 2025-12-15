@@ -1,7 +1,8 @@
 package com.yummy.beckend.dao;
 
 import com.yummy.beckend.dto.RecipeDto;
-import org.mybatis.spring.SqlSessionTemplate;
+
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,8 @@ import java.util.HashMap;
 public class RecipeDAOImpl implements RecipeDAO {
 
     @Autowired
-    private SqlSessionTemplate sqlSession;
+    private SqlSession sqlSession;
+
 
     private static final String NAMESPACE = "Recipe-Mapper";
 
