@@ -36,8 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .addEventListener("click", handleDeleteSelected);
 
     // 4. 레시피 불러오기 버튼
-    document.getElementById("recipeBtn")
-        .addEventListener("click", handleRecipeButton);
+    document.getElementById('recipeBtn').addEventListener('click', () => {
+        handleRecipeRecommendation();
+    });
 
     // 5. 인라인 수정 모드 (이벤트 위임)
     document.addEventListener("click", (e) => {
@@ -77,7 +78,7 @@ function addIngredient(categoryKey) {
         if (data.status === "OK") {
             loadFridgeData();
         } else {
-            showAutoModal(data.message); // 모달로 변경
+            showAutoModal(data.message); 
         }
     })
     .catch(err => console.error("추가 실패:", err));
@@ -99,24 +100,24 @@ function modifyIngredient(id, newName, newCategory, newDate) {
         if (data.status === "OK") {
             loadFridgeData();
         } else {
-            showAutoModal(data.message); // 모달로 변경
+            showAutoModal(data.message); 
             loadFridgeData();
         }
     })
     .catch(err => console.error("수정 실패:", err));
 }
 
-// 4. 선택 삭제 (여기가 핵심 수정 부분!)
+// 4. 선택 삭제
 async function handleDeleteSelected() {
     const checkedBoxes = document.querySelectorAll(".ingredient-check:checked");
-    
+
     // 선택된 게 없을 때
     if (checkedBoxes.length === 0) {
         showAutoModal("삭제할 재료를 선택해주세요.");
         return;
     }
 
-    // ★ 모달로 확인 받기 (await 사용)
+    // ★ 모달로 확인 받기
     const isConfirmed = await showConfirmModal("선택한 재료를 삭제하시겠습니까?");
     if (!isConfirmed) return; // '아니오' 누르면 중단
 
@@ -124,6 +125,7 @@ async function handleDeleteSelected() {
     const formData = new FormData();
     checkedBoxes.forEach(chk => {
         const row = chk.closest(".ingredient-row");
+        // 중요: 체크박스의 value가 아닌, div의 data-id를 사용
         formData.append("ids[]", row.dataset.id);
     });
 
@@ -171,10 +173,11 @@ function createItemHTML(item) {
     const ddayInfo = getDDayInfo(item.expirationDate);
     const dateText = item.expirationDate || "유통기한 등록";
 
+    // data-id: 재료 ID, ingredient-check: 선택용 체크박스
     return `
         <div class="ingredient-row" data-id="${item.id}" data-category="${item.category}">
             <label class="check-wrap">
-                <input type="checkbox" class="ingredient-check" />
+                <input type="checkbox" class="ingredient-check" name="ingredientId" value="${item.id}" /> 
             </label>
 
             <div class="ingredient-info">
@@ -285,14 +288,95 @@ function enterDateEditMode(dateEl) {
 }
 
 /* =========================================
-   레시피 페이지 이동
+   레시피 페이지 이동 (AI 추천 로직)
    ========================================= */
-function handleRecipeButton() {
-    if (currentIngredients.length === 0) {
-        showAutoModal("냉장고에 등록된 재료가 없습니다"); // 모달로 변경
-        return;
+
+/**
+ * ⭐️ 현재 냉장고 목록에서 체크된 모든 재료의 ID를 수집합니다.
+ */
+function getSelectedIngredientIds() {
+    // name="ingredientId"를 가진 모든 체크박스 중에서 체크된 항목을 찾음
+    const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"][name="ingredientId"]:checked');
+    const ids = [];
+    checkedCheckboxes.forEach(checkbox => {
+        // 체크박스의 value는 재료 ID입니다.
+        ids.push(checkbox.value);
+    });
+    return ids;
+}
+
+
+/**
+ * ⭐️ 레시피 추천 요청을 처리하고, 결과를 받아 현재 창을 상세 페이지로 이동합니다.
+ */
+function handleRecipeRecommendation() {
+    const selectedIds = getSelectedIngredientIds();
+    const idsString = selectedIds.join(','); // 콤마로 구분된 문자열 생성 (빈 문자열이면 전체 재료로 간주)
+
+    // 선택된 재료 ID가 없지만 사용자가 요청했다면, 전체 재료로 요청됩니다.
+    if (selectedIds.length === 0) {
+        if (!confirm("선택된 재료가 없습니다. 냉장고의 모든 재료를 활용하여 레시피를 추천하시겠습니까?")) {
+            return;
+        }
     }
 
-    // TODO: 레시피 페이지 이동 로직 구현
-    showAutoModal("레시피 검색 기능 구현 예정입니다.\n현재 등록된 재료 수: " + currentIngredients.length);
+    // [💡 로딩 시작]
+    showLoading();
+
+    // 2. 서버의 /fridge/recommend API 호출 (POST AJAX)
+    fetch('/fridge/recommend', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        // selectedIds 파라미터로 선택된 ID 목록 (또는 빈 문자열)을 전송
+        body: `selectedIds=${idsString}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        // [💡 로딩 종료]
+        hideLoading();
+
+        if (data.status === 'OK' && data.recipeId) {
+            // 3. 성공적으로 레시피 ID를 받은 경우, 현재 창 이동
+            const recipeId = data.recipeId;
+            const aiMessage = encodeURIComponent(data.aiMessage); // 메시지에 특수문자가 있을 수 있으므로 인코딩
+            const recipeQuery = encodeURIComponent(data.recipeQuery); // 재추천용 쿼리도 인코딩
+
+            // URL 구성: /fridge/recipe-detail?recipeId=...
+            const detailUrl = `/fridge/recipe-detail?recipeId=${recipeId}&aiMessage=${aiMessage}&recipeQuery=${recipeQuery}`;
+
+            // ⭐️ 창 이동 (현재 페이지에서 상세 페이지로 이동)
+            window.location.href = detailUrl;
+
+        } else if (data.status === 'OK' && !data.recipeId) {
+            // AI가 레시피는 찾지 못했으나 응답은 준 경우
+            showAutoModal("AI가 적절한 레시피를 찾지 못했습니다. AI 답변: " + data.aiMessage);
+        } else if (data.status === 'UNAUTHORIZED') {
+            showAutoModal("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+            window.location.href = "/user/loginForm";
+        } else {
+            showAutoModal("레시피 추천 중 오류가 발생했습니다: " + (data.message || "서버 오류"));
+        }
+    })
+    .catch(error => {
+        // [💡 로딩 종료]
+        hideLoading();
+        console.error('레시피 추천 API 호출 오류:', error);
+        showAutoModal('서버와 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+    });
 }
+
+
+// ----------------------------------------------------
+// 💡 로딩 함수는 실제 프로젝트에 맞게 구현 필요
+function showLoading() {
+    // 예: 화면 중앙에 스피너 표시 로직
+    console.log("로딩 시작...");
+    // 실제 구현 시, 사용자에게 로딩 중임을 명확히 보여줘야 함
+}
+function hideLoading() {
+    // 예: 스피너 숨김 로직
+    console.log("로딩 종료.");
+}
+// ----------------------------------------------------

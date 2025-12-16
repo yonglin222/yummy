@@ -43,17 +43,26 @@ public class FridgeDAOImpl implements FridgeDAO {
     public FridgeDto findById(Long id) throws SQLException {
         return sqlSession.selectOne(NAMESPACE + ".findById", id);
     }
-    
+
     @Override
     public List<String> findIngredientNamesByUserId(Long userId) throws SQLException {
         return sqlSession.selectList(NAMESPACE + ".findIngredientNamesByUserId", userId);
     }
 
     @Override
-public void deleteIngredients(Long userId, List<Long> idList) throws SQLException {
-    Map<String, Object> params = new HashMap<>();
-    params.put("userId", userId);
-    params.put("idList", idList);
-    sqlSession.delete("Fridge-Mapper.deleteIngredients", params); 
+    public void deleteIngredients(Long userId, List<Long> idList) throws SQLException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("idList", idList);
+        sqlSession.delete("Fridge-Mapper.deleteIngredients", params);
+    }
+
+    // ⭐️ B-1. 선택된 재료 ID 목록으로 재료명 리스트만 조회 (추가)
+    @Override
+    public List<String> findIngredientNamesByIds(List<Long> idList, Long userId) throws SQLException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("idList", idList);
+        params.put("userId", userId);
+        return sqlSession.selectList(NAMESPACE + ".findIngredientNamesByIds", params);
     }
 }

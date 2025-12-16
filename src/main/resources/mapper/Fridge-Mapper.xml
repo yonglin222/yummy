@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="Fridge-Mapper"> 
+<mapper namespace="Fridge-Mapper">
 
     <insert id="insertIngredient" parameterType="com.yummy.beckend.dto.FridgeDto">
         INSERT INTO FRIDGE (
@@ -23,16 +23,16 @@
     <select id="findByUserId" parameterType="long" resultType="com.yummy.beckend.dto.FridgeDto">
         SELECT
             <include refid="selectColumns"/>,
-            CASE 
-                WHEN EXPIRATION_DATE IS NOT NULL 
-                THEN TRUNC(EXPIRATION_DATE) - TRUNC(SYSDATE) 
-                ELSE NULL 
+            CASE
+                WHEN EXPIRATION_DATE IS NOT NULL
+                THEN TRUNC(EXPIRATION_DATE) - TRUNC(SYSDATE)
+                ELSE NULL
             END AS dday
         FROM FRIDGE
         WHERE USER_ID = #{userId}
         ORDER BY ID DESC
     </select>
-    
+
     <select id="findById" parameterType="long" resultType="com.yummy.beckend.dto.FridgeDto">
         SELECT <include refid="selectColumns"/> FROM FRIDGE WHERE ID = #{id}
     </select>
@@ -56,5 +56,15 @@
 
     <select id="findIngredientNamesByUserId" parameterType="long" resultType="string">
         SELECT INGREDIENT FROM FRIDGE WHERE USER_ID = #{userId} ORDER BY INGREDIENT ASC
+    </select>
+
+    <select id="findIngredientNamesByIds" parameterType="map" resultType="string">
+        SELECT INGREDIENT
+        FROM FRIDGE
+        WHERE USER_ID = #{userId} AND ID IN
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ORDER BY INGREDIENT ASC
     </select>
 </mapper>

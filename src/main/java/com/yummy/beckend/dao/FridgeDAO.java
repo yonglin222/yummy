@@ -16,23 +16,19 @@ public interface FridgeDAO {
 
     // B-2. 재료 삭제
     void deleteIngredient(Long id) throws SQLException;
-    
+
     // D-2. 냉장고 재료 목록 조회 (사용자별)
     List<FridgeDto> findByUserId(Long userId) throws SQLException;
 
     // 특정 재료 ID로 재료 정보 조회 (수정/삭제 전 검증용)
     FridgeDto findById(Long id) throws SQLException;
-    
+
     // B-1. 재료 활용 레시피 검색을 위해, 재료명 리스트만 조회
     List<String> findIngredientNamesByUserId(Long userId) throws SQLException;
 
     // B-2. 재료 다중 삭제
     void deleteIngredients(@Param("userId") Long userId, @Param("idList") List<Long> idList) throws SQLException;
 
-    // D-1. 선택 재료명으로 레시피 추천 (추후기능)
-    // List<String> findIngredientNamesByKeyword(@Param("keyword") String keyword) throws SQLException;
-
-    // D-1. 전체 재료명으로 레시피 추천 (추후기능)
-    // List<String> findAllIngredientNamesByKeyword(@Param("keyword") String keyword) throws SQLException;
-    
+    // ⭐️ B-1. 선택된 재료 ID 목록으로 재료명 리스트만 조회 (추가)
+    List<String> findIngredientNamesByIds(@Param("idList") List<Long> idList, @Param("userId") Long userId) throws SQLException;
 }

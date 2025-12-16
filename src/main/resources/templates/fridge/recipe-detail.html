@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 레시피 추천 상세</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/fridge-recipe.css">
+</head>
+<body>
+
+<div class="fridge-recipe-page">
+    <h2 class="page-title">🍽️ 냉장고 재료 맞춤 AI 레시피</h2>
+
+    <div class="recipe-box">
+        <p id="ai-response-message" style="margin-bottom: 20px; padding: 10px; border: 1px solid #eee; border-radius: 8px; background: #f9f9f9;"></p>
+
+        <div class="detail-card-area">
+            <h1 id="recipe-title" class="detail-title">레시피 제목</h1>
+            
+            <div class="detail-meta">
+                <div class="people-time">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="recipe-cookTime">00분</span>
+                </div>
+                <div class="people-time">
+                    <i class="fa-solid fa-user"></i>
+                    <span id="recipe-serving">0인분</span>
+                </div>
+            </div>
+
+            <div class="detail-ingredient-row">
+                <div class="ingredient-box">
+                    <h3>재료</h3>
+                    <ul id="ingredient-list"></ul>
+                </div>
+
+                <div class="ingredient-box">
+                    <h3>양념</h3>
+                    <ul id="seasoning-list"></ul>
+                </div>
+            </div>
+
+            <div class="detail-recipe">
+                <h3>만드는 법</h3>
+                <ol id="steps-list"></ol>
+            </div>
+            
+            </div>
+        
+    </div>
+
+    <div class="btn-row">
+        <button id="newRecipeBtn" class="main-btn">같은 재료로 다른 레시피 추천 받기</button>
+        
+        <button id="backToFridgeBtn" class="sub-btn">나의 냉장고로 돌아가기</button>
+    </div>
+
+</div>
+
+<script src="/js/fridge-recipe.js"></script>
+
+</body>
+</html>
