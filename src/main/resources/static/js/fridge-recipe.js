@@ -42,9 +42,6 @@ function loadRecipe(recipeId, aiMessage) {
     // 💡 URL에서 가져온 메시지는 디코딩하여 사용
     document.getElementById("ai-response-message").textContent = decodeURIComponent(aiMessage) || "AI가 맞춤 레시피를 추천했습니다!";
     
-    // 로딩 시작 (필요하다면)
-    // showLoading(); 
-
     fetch(`/recipe/api/detail/${recipeId}`)
         .then(response => {
             if (!response.ok) {
@@ -53,8 +50,6 @@ function loadRecipe(recipeId, aiMessage) {
             return response.json();
         })
         .then(data => {
-            // hideLoading(); // 로딩 종료
-
             if (data.status === 'OK' && data.recipe) {
                 const recipe = data.recipe;
                 
@@ -65,7 +60,9 @@ function loadRecipe(recipeId, aiMessage) {
 
                 // 2. 재료 (ingredients)
                 const ingList = document.getElementById("ingredient-list");
-                ingList.innerHTML = recipe.ingredient.split(/[\n,]/)
+                // ⭐️⭐️⭐️ recipe.ingredient가 null일 경우 빈 문자열로 대체 (Null Safety) ⭐️⭐️⭐️
+                const ingredientText = recipe.ingredient || ""; 
+                ingList.innerHTML = ingredientText.split(/[\n,]/)
                                                     .map(i => i.trim())
                                                     .filter(i => i.length > 0)
                                                     .map(i => `<li>${i}</li>`)
@@ -73,7 +70,9 @@ function loadRecipe(recipeId, aiMessage) {
                 
                 // 3. 양념 (seasoning)
                 const seasoning = document.getElementById("seasoning-list");
-                seasoning.innerHTML = recipe.spicyIngredient.split(/[\n,]/)
+                // ⭐️⭐️⭐️ recipe.spicyIngredient가 null일 경우 빈 문자열로 대체 (Null Safety) ⭐️⭐️⭐️
+                const spicyIngredientText = recipe.spicyIngredient || "";
+                seasoning.innerHTML = spicyIngredientText.split(/[\n,]/)
                                                             .map(s => s.trim())
                                                             .filter(s => s.length > 0)
                                                             .map(s => `<li>${s}</li>`)
@@ -81,6 +80,7 @@ function loadRecipe(recipeId, aiMessage) {
 
                 // 4. 만드는 법 (methodSteps - Service에서 이미 리스트로 처리됨)
                 const steps = document.getElementById("steps-list");
+                // recipe.methodSteps가 null이거나 비어있을 경우에 대한 방어 로직은 이미 Array.map()이 처리해줍니다.
                 steps.innerHTML = recipe.methodSteps.map(s => `<li>${s}</li>`).join("");
 
             } else {
@@ -88,7 +88,6 @@ function loadRecipe(recipeId, aiMessage) {
             }
         })
         .catch(error => {
-            // hideLoading(); // 로딩 종료
             console.error('레시피 상세 정보 로드 오류:', error);
             document.getElementById("recipe-title").textContent = "데이터 통신 오류가 발생했습니다.";
         });
@@ -97,7 +96,6 @@ function loadRecipe(recipeId, aiMessage) {
 
 /**
  * ⭐️ '같은 재료로 다른 레시피 추천 받기' 로직 (수정됨)
- * 저장된 원본 AI 쿼리 텍스트를 서버에 다시 전송하고, 현재 창의 URL을 업데이트합니다.
  */
 function reloadRecipe(recipeQueryText) {
     if (!recipeQueryText || recipeQueryText.trim() === "") {
@@ -109,13 +107,13 @@ function reloadRecipe(recipeQueryText) {
     // 로딩 시작 (필요하다면 showLoading() 호출)
     console.log("AI 재추천 요청 시작...");
 
-    // 1. 서버의 /fridge/recommend API를 재호출 (queryText 파라미터 사용)
+    // 1. 서버의 /fridge/recommend API를 재호출
     fetch('/fridge/recommend', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        // ⭐️⭐️⭐️ 파라미터 이름을 "recipeQuery"로 수정 ⭐️⭐️⭐️
+        // ⭐️ 'recipeQuery'로 수정하여 백엔드와 일치시킴
         body: `recipeQuery=${encodeURIComponent(recipeQueryText)}` 
     })
     .then(response => response.json())
@@ -139,11 +137,12 @@ function reloadRecipe(recipeQueryText) {
         } else if (data.status === 'OK' && !data.recipeId) {
             alert("AI가 새로운 레시피를 찾지 못했습니다. AI 답변: " + data.aiMessage);
         } else {
+            // 서버 오류를 JSON으로 받은 경우
             alert("재추천 중 오류가 발생했습니다: " + (data.message || "서버 오류"));
         }
     })
     .catch(error => {
-        // hideLoading();
+        // 네트워크/파싱 오류
         console.error('AI 재추천 API 호출 오류:', error);
         alert('서버와 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
     });
