@@ -15,12 +15,7 @@ a {
 }
 
 /* ====== 푸터 전체 ====== */
-:root { --footer-h: 150px; } /* footer 높이 (추후 조절) */
 
-body {
-  padding-bottom: var(--footer-h); /* 본문이 푸터랑 겹치지 않도록 */
-  margin: 0;
-}
 
 .footer {
   background-color: #a6d785;
