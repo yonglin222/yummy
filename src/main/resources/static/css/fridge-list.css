@@ -338,14 +338,23 @@ body {
   margin-top: 40px;
   display: flex;
   justify-content: center;
+  gap: 20px;
 }
 
 .recipe-btn {
   border-radius: 50px;
-  padding: 14px 32px;
+  padding: 14px 28px;
   border: none;
   cursor: pointer;
-  background: linear-gradient(90deg, #ffe0e5, #daf8d6);
+  font-size: 15px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  font-size: 16px;
 }
+
+.recipe-btn.selected {
+  background: linear-gradient(90deg, #d7f7d6, #b9ebc0);
+}
+
+.recipe-btn.all {
+  background: linear-gradient(90deg, #ffe0e5, #daf8d6);
+}
+

@@ -69,10 +69,14 @@
         </section>
 
         <section class="bottom-area">
-            <button id="recipeBtn" class="recipe-btn">
-                → 이 재료로 할 수 있는 레시피 불러오기
-            </button>
-        </section>
+    <button id="recipeSelectedBtn" class="recipe-btn selected">
+        선택 재료로 레시피 불러오기
+    </button>
+
+    <button id="recipeAllBtn" class="recipe-btn all">
+        전체 재료로 레시피 불러오기
+    </button>
+</section>
     </main>
 
     <th:block th:replace="~{modules/footer :: footerFragment}"></th:block>
