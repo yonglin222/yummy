@@ -12,8 +12,9 @@ public interface RecipeDAO {
     // 전체 개수 조회 (페이징용)
     int countRecipeList(Map<String, Object> params) throws SQLException;
 
-    // 기존 메서드 유지
+    // 레시피 상세 조회
     RecipeDto findById(Long recipeId, Long userId) throws SQLException;
+    
     // 즐겨찾기 관련 메서드
     void insertFavorite(Long userId, Long recipeId) throws SQLException;
     void deleteFavorite(Long userId, Long recipeId) throws SQLException;

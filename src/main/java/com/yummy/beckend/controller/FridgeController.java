@@ -17,7 +17,7 @@ import com.yummy.beckend.dto.ChatResponse;
 import com.yummy.beckend.dto.FridgeDto;
 import com.yummy.beckend.dto.UserDto;
 import com.yummy.beckend.exception.UnauthorizedAccessException;
-import com.yummy.beckend.service.ChatService; // 추가
+import com.yummy.beckend.service.ChatService;
 import com.yummy.beckend.service.FridgeService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,11 +25,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.sql.SQLException;
-import java.util.Arrays; // 추가
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors; // 추가
+import java.util.stream.Collectors;
 
 @Tag(name = "2. 냉장고 관리", description = "재료 등록, 수정, 삭제, 조회 (AJAX)")
 @Controller
@@ -40,7 +40,7 @@ public class FridgeController {
     private FridgeService fridgeService;
 
     @Autowired
-    private ChatService chatService; // ChatService 주입
+    private ChatService chatService;
 
     private Long getUserId(HttpSession session) throws UnauthorizedAccessException {
         UserDto user = (UserDto) session.getAttribute("loginUser");
@@ -196,9 +196,6 @@ public class FridgeController {
         return response;
     }
 
-    // ===============================
-    // 6️⃣ 냉장고 재료 기반 AI 추천 시작 (수정된 기능: JSON 반환)
-    // ===============================
     @Operation(summary = "냉장고 재료 기반 AI 추천 시작", description = "선택 재료 또는 전체 재료로 AI에게 레시피를 추천받아 JSON 결과를 반환합니다.")
     @PostMapping("/recommend")
     @ResponseBody
@@ -206,7 +203,7 @@ public class FridgeController {
             @Parameter(description = "선택된 재료 ID 목록 (콤마로 구분, 전체 재료 선택 시 빈 문자열)")
             @RequestParam(value = "selectedIds", required = false, defaultValue = "") String selectedIds,
             @Parameter(description = "재추천 시 사용할 이전 AI 쿼리 텍스트 (URL 디코딩 필요)")
-            @RequestParam(value = "recipeQuery", required = false) String recipeQueryText, // ⭐️ 새 파라미터 추가
+            @RequestParam(value = "recipeQuery", required = false) String recipeQueryText,
             @Parameter(hidden = true) HttpSession session
     ) {
         Map<String, Object> response = new HashMap<>();
@@ -217,7 +214,7 @@ public class FridgeController {
             String userMessage = "";
             String aiUserId = userId.toString();
 
-            // ⭐️⭐️⭐️ 1. 재추천 쿼리 텍스트가 있으면 그걸 사용 (수정된 로직) ⭐️⭐️⭐️
+            // 재추천 쿼리 텍스트가 있으면 그걸 사용
             if (recipeQueryText != null && !recipeQueryText.isEmpty()) {
                 // 재추천 버튼 클릭 시, 이미 생성된 쿼리를 사용
                 userMessage = recipeQueryText;
@@ -242,10 +239,7 @@ public class FridgeController {
                     userMessage = "냉장고 재료: " + ingredientQuery + ", 이 재료들을 활용한 레시피 알려줘.";
                 }
             }
-            // ⭐️⭐️⭐️ 로직 수정 끝 ⭐️⭐️⭐️
-            
             // 2. AI 서비스 호출
-            // ... (기존 코드 유지) ...
             ChatResponse chatResponse = chatService.chat(
                 userMessage,
                 aiUserId
@@ -255,24 +249,21 @@ public class FridgeController {
             response.put("status", "OK");
             response.put("recipeId", chatResponse.getRecommendedRecipe() != null ? chatResponse.getRecommendedRecipe().getRecipeId() : null);
             response.put("aiMessage", chatResponse.getResponse());
-            response.put("recipeQuery", userMessage); // ⭐️ AI에게 최종적으로 전송한 프롬프트를 반환
+            response.put("recipeQuery", userMessage); // AI에게 최종적으로 전송한 프롬프트를 반환
             
-            // ... (기존 코드 유지) ...
         } catch (UnauthorizedAccessException e) {
-            // ... (기존 코드 유지) ...
         } catch (Exception e) {
-            // ... (기존 코드 유지) ...
+            e.printStackTrace();
+            response.put("status", "ERROR");
+            response.put("message", "AI 추천 중 오류가 발생했습니다...");
         }
 
         return response;
     }
     
-    // ===============================
-    // 7️⃣ AI 레시피 상세 페이지 이동 (추가된 기능)
-    // ===============================
-    @Operation(summary = "AI 레시피 상세 페이지", description = "AI 추천 레시피 상세 HTML 페이지를 반환합니다. (새 창용)")
+    @Operation(summary = "AI 레시피 상세 페이지 이동", description = "AI 추천 레시피 상세 HTML 페이지를 반환합니다. (새 창용)")
     @GetMapping("/recipe-detail")
     public String fridgeRecipeDetail() {
-        return "fridge/recipe-detail"; // fridge/recipe-detail.html 렌더링
+        return "fridge/recipe-detail";
     }
 }

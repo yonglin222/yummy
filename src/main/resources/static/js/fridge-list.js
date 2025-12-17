@@ -396,3 +396,20 @@ function hideLoading() {
     console.log("로딩 종료.");
 }
 // ----------------------------------------------------
+
+// 로딩중
+// ----------------------------------------------------
+// 💡 로딩 함수 구현
+function showLoading() {
+    const loadingEl = document.getElementById("loading-spinner");
+    if (loadingEl) {
+        loadingEl.style.display = 'flex'; // 표시
+    }
+}
+function hideLoading() {
+    const loadingEl = document.getElementById("loading-spinner");
+    if (loadingEl) {
+        loadingEl.style.display = 'none'; // 숨김
+    }
+}
+// ----------------------------------------------------

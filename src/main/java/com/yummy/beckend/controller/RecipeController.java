@@ -42,9 +42,6 @@ public class RecipeController {
         return (user != null) ? user.getId() : null;
     }
 
-    // ==========================================
-    // 1. 레시피 목록 (GET)
-    // ==========================================
     @Operation(summary = "레시피 목록 페이지")
     @GetMapping("/list")
     public String recipeList(
@@ -90,9 +87,6 @@ public class RecipeController {
         return "recipe/list";
     }
 
-    // ==========================================
-    // 2. 레시피 상세 (GET)
-    // ==========================================
     @Operation(summary = "레시피 상세 페이지")
     @GetMapping("/detail/{recipeId}")
     public String recipeDetail(@PathVariable Long recipeId,
@@ -118,9 +112,6 @@ public class RecipeController {
         return "recipe/detail";
     }
 
-    // ==========================================
-    // 3. 즐겨찾기 목록 (GET)
-    // ==========================================
     @Operation(summary = "나의 즐겨찾기 페이지")
     @GetMapping("/favorites")
     public String favoriteList(HttpSession session, Model model) throws SQLException {
@@ -148,9 +139,6 @@ public class RecipeController {
         return "recipe/favorites";
     }
 
-    // ==========================================
-    // 4. 즐겨찾기 토글 (POST)
-    // ==========================================
     @Operation(summary = "즐겨찾기 추가/삭제 (AJAX)")
     @PostMapping("/toggleFavorite")
     @ResponseBody
@@ -174,21 +162,19 @@ public class RecipeController {
 
             response.put("status", "OK");
             response.put("isFavorite", isFavorite);
-            // 토스트 팝업(잠깐 떴다 사라지는 알림)용으로 남겨두는 경우가 많음
+            // 토스트 팝업 메시지 추가
             response.put("message", isFavorite ? "즐겨찾기에 추가되었습니다." : "즐겨찾기에서 삭제되었습니다.");
             
         } catch (SQLException e) {
             e.printStackTrace();
             response.put("status", "ERROR");
-            // 에러 상황은 로그인이랑 다르므로 메시지를 남기는 것이 디버깅에 좋음
+            // 에러 상황에 대한 메시지 추가
             response.put("message", "서버 오류가 발생했습니다.");
         }
         return response;
     }
     
-    // ==========================================
-    // 5. 레시피 상세 데이터 API (AJAX 모달용)
-    // ==========================================
+    // 레시피 상세 데이터 API (AJAX 모달용)
     @Operation(summary = "레시피 상세 데이터 조회 (JSON)")
     @ResponseBody
     @GetMapping("/api/detail/{recipeId}")
@@ -197,10 +183,10 @@ public class RecipeController {
         try {
             Long userId = getUserId(session);
             
-            // 1. 레시피 정보 조회
+            // 레시피 정보 조회
             RecipeDto recipe = recipeService.getRecipeDetail(recipeId, userId);
             
-            // 2. 즐겨찾기 여부 조회
+            // 즐겨찾기 여부 조회
             boolean isFavorite = false;
             if (userId != null) {
                 int count = recipeService.countFavorite(userId, recipeId);

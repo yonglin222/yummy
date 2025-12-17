@@ -29,6 +29,6 @@ public interface FridgeDAO {
     // B-2. 재료 다중 삭제
     void deleteIngredients(@Param("userId") Long userId, @Param("idList") List<Long> idList) throws SQLException;
 
-    // ⭐️ B-1. 선택된 재료 ID 목록으로 재료명 리스트만 조회 (추가)
+    // B-1. 선택된 재료 ID 목록으로 재료명 리스트만 조회
     List<String> findIngredientNamesByIds(@Param("idList") List<Long> idList, @Param("userId") Long userId) throws SQLException;
 }

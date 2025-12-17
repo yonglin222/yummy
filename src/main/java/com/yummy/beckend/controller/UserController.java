@@ -37,7 +37,6 @@ public class UserController {
     @Operation(summary = "회원가입 페이지 이동")
     @GetMapping("/registForm")
     public String registForm(@ModelAttribute("userDto") UserDto userDto) {
-        // templates/user/signup.html
         return "user/signup"; 
     }
 
@@ -68,14 +67,11 @@ public class UserController {
         }
     }
 
-    // ==========================================
     // 2. 로그인 관련
-    // ==========================================
 
     @Operation(summary = "로그인 페이지 이동")
     @GetMapping("/loginForm")
     public String loginForm(@ModelAttribute("userDto") UserDto userDto) {
-        // templates/user/login.html
         return "user/login";
     }
 
