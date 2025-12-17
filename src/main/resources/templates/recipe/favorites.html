@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
-        /* 프론트팀 요청: 타이틀 그라데이션 스타일 */
+        /* 타이틀 아이콘 그라데이션 (프론트팀 요청 사항) */
         .page-title i {
             background: linear-gradient(135deg, #fff2b3, #f7d774, #e3b54a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
-        /* 즐겨찾기 전용: 목록이 비었을 때 메시지 스타일 */
+        /* 즐겨찾기 목록이 비었을 때 메시지 스타일 */
         .empty-message {
             text-align: center;
             padding: 100px 0;
@@ -51,8 +51,12 @@
                 <div th:each="recipe : ${recipeList}" class="recipe-card" 
                      th:attr="data-id=${recipe.recipeId}">
                     
+                    <img th:src="@{/img/recipe/recipe_{id}.jpg(id=${recipe.recipeId})}" 
+                         th:alt="${recipe.name}"
+                         onerror="this.onerror=null; this.src='/img/recipe/default.jpg';" 
+                         class="recipe-thumbnail">
+                    
                     <h3 th:text="${recipe.name}" style="margin: 0;">레시피 이름</h3>
-                
                 </div>
             </div>
 
@@ -63,9 +67,7 @@
 
     </div>
 
-
     <th:block th:replace="~{modules/footer :: footerFragment}"></th:block>
-
     <script th:src="@{/js/favorites.js}"></script>
 
 </body>

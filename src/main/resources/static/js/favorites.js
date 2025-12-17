@@ -58,6 +58,20 @@ function renderDetailView(recipe, isFavorite) {
     document.getElementById("recipeListPage").style.display = "none";
     document.getElementById("recipeDetailPage").style.display = "block";
 
+    // --- [추가된 이미지 바인딩 코드] ---
+    const detailImg = document.getElementById("detailImage");
+    if (detailImg) {
+        // Thymeleaf에서 사용하는 경로 규칙과 동일하게 설정
+        detailImg.src = `/img/recipe/recipe_${recipe.recipeId}.jpg`;
+        
+        // 이미지 로딩 실패 시 기본 이미지 설정
+        detailImg.onerror = function() {
+            this.src = '/img/recipe/default.jpg';
+            this.onerror = null; 
+        };
+    }
+    // --------------------------------
+
     // 텍스트 바인딩
     setText("detailTitle", recipe.name);
     setText("detailCookTime", recipe.time + "분");
