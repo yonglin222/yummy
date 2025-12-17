@@ -35,9 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("deleteSelectedBtn")
         .addEventListener("click", handleDeleteSelected);
 
-    // 4. 레시피 불러오기 버튼
-    document.getElementById('recipeBtn').addEventListener('click', () => {
-        handleRecipeRecommendation();
+    // ⭐️ 4. 레시피 불러오기 버튼 이벤트 연결 (수정됨)
+    document.getElementById('recipeSelectedBtn').addEventListener('click', () => {
+        handleRecipeRecommendation('selected');
+    });
+    document.getElementById('recipeAllBtn').addEventListener('click', () => {
+        handleRecipeRecommendation('all');
     });
 
     // 5. 인라인 수정 모드 (이벤트 위임)
@@ -308,16 +311,29 @@ function getSelectedIngredientIds() {
 
 /**
  * ⭐️ 레시피 추천 요청을 처리하고, 결과를 받아 현재 창을 상세 페이지로 이동합니다.
+ * @param {string} mode 'selected' 또는 'all'
  */
-function handleRecipeRecommendation() {
+function handleRecipeRecommendation(mode) {
     const selectedIds = getSelectedIngredientIds();
-    const idsString = selectedIds.join(','); // 콤마로 구분된 문자열 생성 (빈 문자열이면 전체 재료로 간주)
+    let idsString = '';
 
-    // 선택된 재료 ID가 없지만 사용자가 요청했다면, 전체 재료로 요청됩니다.
-    if (selectedIds.length === 0) {
-        if (!confirm("선택된 재료가 없습니다. 냉장고의 모든 재료를 활용하여 레시피를 추천하시겠습니까?")) {
+    if (mode === 'selected') {
+        if (selectedIds.length === 0) {
+            showAutoModal("선택 재료로 레시피를 불러오려면 재료를 하나 이상 선택해주세요.");
             return;
         }
+        idsString = selectedIds.join(',');
+    } else if (mode === 'all') {
+        // 전체 재료로 요청할 때는 idsString을 빈 문자열로 남겨서 Controller가 전체 재료 로직을 타게 함
+        // (Controller에서 selectedIds=""이면 전체 재료로 처리하고 있습니다.)
+        // 다만, 전체 재료가 없는 경우를 위한 추가 확인 로직을 넣을 수 있음
+        if (currentIngredients.length === 0) {
+            showAutoModal("냉장고에 등록된 재료가 없어 AI 추천을 요청할 수 없습니다.");
+            return;
+        }
+        idsString = ''; // Controller의 로직에 따라 빈 문자열 또는 모든 재료 ID를 사용 가능. 현재는 Controller가 빈 문자열이면 전체 재료를 처리함
+    } else {
+        return;
     }
 
     // [💡 로딩 시작]
@@ -329,7 +345,7 @@ function handleRecipeRecommendation() {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        // selectedIds 파라미터로 선택된 ID 목록 (또는 빈 문자열)을 전송
+        // selectedIds 파라미터로 선택된 ID 목록 (또는 전체 재료 요청 시 빈 문자열)을 전송
         body: `selectedIds=${idsString}`
     })
     .then(response => response.json())
