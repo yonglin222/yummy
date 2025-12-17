@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    
   document.querySelectorAll(".recipe-thumbnail").forEach((img) => {
     img.addEventListener("click", (e) => {
       e.stopPropagation(); // 🔥 카드 클릭 이벤트 차단
@@ -93,6 +92,12 @@ function renderDetailView(recipe, isFavorite) {
   // 화면 전환
   document.getElementById("recipeListPage").style.display = "none";
   document.getElementById("recipeDetailPage").style.display = "block";
+
+  const img = document.getElementById("detailImage");
+  img.src = `/img/recipe/recipe_${recipe.recipeId}.jpg`;
+  img.onerror = () => {
+    img.src = "/img/recipe/default.jpg";
+  };
 
   // 1. 기본 정보 (DTO 필드명: name, time, serving)
   setText("detailTitle", recipe.name);

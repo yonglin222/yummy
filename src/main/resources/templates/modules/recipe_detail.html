@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <body>
 
     <div id="recipeDetailPage" th:fragment="recipeDetailFragment" style="display: none;">
-            
+
         <button id="backToList" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i> 목록으로
         </button>
-        
+
         <div class="detail-card-area">
-            <h2 id="detailTitle" class="detail-title">레시피 제목</h2>
+            <div class="detail-image-wrap">
+                <img id="detailImage" src="/img/recipe/default.jpg" alt="레시피 이미지" class="detail-image">
+            </div>
             
+            <h2 id="detailTitle" class="detail-title">레시피 제목</h2>
+
             <div class="detail-meta">
                 <div class="people-time">
                     <i class="fa-regular fa-clock"></i>
@@ -26,20 +31,20 @@
                 <div class="ingredient-box">
                     <h3>재료</h3>
                     <ul id="detailIngredients">
-                        </ul>
+                    </ul>
                 </div>
 
                 <div class="ingredient-box">
                     <h3>양념</h3>
                     <ul id="detailSeasoning">
-                        </ul>
+                    </ul>
                 </div>
             </div>
 
             <div class="detail-recipe">
                 <h3>만드는 법</h3>
                 <ol id="detailCooking">
-                    </ol>
+                </ol>
             </div>
 
             <button id="favoriteBtn" class="favorite-btn" data-hover-text="즐겨찾기 추가하기">
@@ -48,5 +53,6 @@
             </button>
         </div>
     </div>
-    </body>
+</body>
+
 </html>
