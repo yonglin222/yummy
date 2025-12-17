@@ -4,7 +4,6 @@ import com.yummy.beckend.dto.CategoryDto;
 import com.yummy.beckend.dto.RecipeDto;
 
 import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

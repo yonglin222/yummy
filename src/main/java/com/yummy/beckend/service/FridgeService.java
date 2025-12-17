@@ -3,8 +3,6 @@ package com.yummy.beckend.service;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.yummy.beckend.dto.FridgeDto;
 import com.yummy.beckend.exception.UnauthorizedAccessException;
 
