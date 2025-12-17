@@ -195,13 +195,11 @@ public class FridgeController {
         }
         return response;
     }
-// ... (기존 코드 유지) ...
 
     @Operation(summary = "냉장고 재료 기반 AI 추천 메시지 생성", description = "선택 재료 또는 전체 재료로 AI에게 보낼 프롬프트 텍스트를 구성하여 반환합니다. (AI 호출 없음)")
     @PostMapping("/recommend")
     @ResponseBody
     public Map<String, Object> recommendRecipeByFridge(
-            // ... (파라미터 그대로 유지) ...
             @RequestParam(value = "selectedIds", required = false, defaultValue = "") String selectedIds,
             @RequestParam(value = "recipeQuery", required = false) String recipeQueryText, // 재추천 로직 제거 가능
             @Parameter(hidden = true) HttpSession session
@@ -213,7 +211,7 @@ public class FridgeController {
             String ingredientQuery;
             String userMessage;
 
-            // ⭐️⭐️⭐️ 1. 메시지 생성 로직만 남깁니다. ⭐️⭐️⭐️
+            // 1. 메시지 생성 로직만 남깁니다.
             
             // 재추천 시 사용되는 recipeQueryText는 JS에서 처리하므로, 여기서는 무시합니다.
             // 이 API는 오직 최초 재료 쿼리 텍스트를 생성하는 역할만 수행합니다.
@@ -238,7 +236,7 @@ public class FridgeController {
                 userMessage = "냉장고 재료: " + ingredientQuery + ", 이 재료들을 활용한 레시피 알려줘.";
             }
 
-            // ⭐️ 2. AI 호출 대신, 메시지 텍스트만 반환합니다. ⭐️
+            // 2. AI 호출 대신, 메시지 텍스트만 반환합니다.
             response.put("status", "OK");
             response.put("recipeQuery", userMessage); 
             // recipeId, aiMessage 등 AI 관련 필드는 모두 제거합니다.

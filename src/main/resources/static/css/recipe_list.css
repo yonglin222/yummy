@@ -12,11 +12,13 @@ body {
   color: #333;
 }
 
-ul, ol {
+ul,
+ol {
   margin: 0;
   padding: 0;
   list-style: none; /* 기본 불릿 제거 */
 }
+
 
 /* ----------------------------------
    페이지 레이아웃
@@ -106,24 +108,33 @@ h2 {
 }
 
 .recipe-card {
-  border: 2px solid #89ca6a;
+  /* border: 2px solid #89ca6a; */
   border-radius: 16px;
-  padding: 40px 20px;
+  padding: 16px;
   text-align: center;
   font-size: 17px;
   background: white;
   transition: 0.2s;
   cursor: pointer;
+  overflow: hidden;
 }
 
-.recipe-card:hover {
+.recipe-thumbnail {
+  width: 100%;
+  height: 270px;                 
+  object-fit: cover;             
+  border-radius: 12px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* .recipe-card:hover {
   background: #66ad46;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.09);
   color: #fff;
-}
+} */
 
 .recipe-card h3 {
-  margin: 0;
   font-size: 18px;
   font-weight: 600;
 }
@@ -137,8 +148,14 @@ h2 {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* 뒤로가기 버튼 */
@@ -252,6 +269,7 @@ h2 {
   padding: 24px;
 }
 
+
 .detail-recipe h3 {
   margin-top: 0;
   margin-bottom: 15px;
@@ -263,7 +281,7 @@ h2 {
 
 .detail-recipe ol {
   padding-left: 20px; /* 숫자 보이게 */
-  list-style: decimal; 
+  list-style: decimal;
 }
 
 .detail-recipe ol li {
