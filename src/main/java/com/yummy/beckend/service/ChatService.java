@@ -20,14 +20,14 @@ public class ChatService {
 
     public ChatResponse chat(String userMessage, String userId) {
 
-        // 1️⃣ FastAPI 호출
+        // FastAPI 호출
         AiRecommendResponse aiResult =
                 aiService.recommend(userMessage, userId);
 
-        // ✅ Lombok getter 사용
+        // Lombok getter 사용
         String answer = aiResult.getAnswer();
 
-        // 2️⃣ 추천 레시피 조회
+        // 추천 레시피 조회
         RecipeDto recipe = null;
         if (aiResult.getRecipeId() != null) {
             try {
@@ -40,7 +40,7 @@ public class ChatService {
             }
         }
 
-        // 3️⃣ 프론트 응답
+        // 프론트 응답
         return new ChatResponse(answer, recipe);
     }
 }

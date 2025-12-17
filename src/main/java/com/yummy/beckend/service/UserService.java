@@ -15,7 +15,7 @@ public interface UserService {
     // 로그인
     UserDto login(String email, String password) throws NotFoundUserException, InvalidCredentialsException, SQLException;
 
-    // 이메일 중복 확인 (boolean 반환으로 변경하여 컨트롤러에서 쓰기 편하게 함)
+    // 이메일 중복 확인
     boolean isEmailExists(String email) throws SQLException;
 
     // 닉네임 중복 확인

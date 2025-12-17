@@ -25,7 +25,6 @@ public class FridgeServiceImpl implements FridgeService {
     @Override
     @Transactional(rollbackFor = SQLException.class)
     public void registIngredient(FridgeDto fridgeDto) throws SQLException {
-        // DTO에 userId가 설정되어 있다고 가정하고 DAO로 전달
         fridgeDAO.insertIngredient(fridgeDto);
     }
 
@@ -59,20 +58,16 @@ public class FridgeServiceImpl implements FridgeService {
         fridgeDAO.deleteIngredient(ingredientId);
     }
 
-    /**
-     * D-2. 사용자별 냉장고 재료 목록 조회
-     */
+    // D-2. 사용자별 냉장고 재료 목록 조회
     @Override
     public List<FridgeDto> getIngredientsByUserId(Long userId) throws SQLException {
-        // DAO에서 D-day 정보까지 계산된 FridgeDto 리스트를 가져옵니다.
+        // DAO에서 D-day 정보까지 계산된 FridgeDto 리스트를 가져옴
         List<FridgeDto> ingredients = fridgeDAO.findByUserId(userId);
 
         return ingredients;
     }
 
-    /**
-     * B-1. 재료 활용 레시피 검색을 위한 재료명 리스트 조회
-     */
+    // B-1. 재료 활용 레시피 검색을 위한 재료명 리스트 조회
     @Override
     public List<String> getIngredientNamesForRecipeSearch(Long userId) throws SQLException {
         return fridgeDAO.findIngredientNamesByUserId(userId);
@@ -86,19 +81,19 @@ public class FridgeServiceImpl implements FridgeService {
         fridgeDAO.deleteIngredients(userId, idList);
     }
 
-    // ⭐️ B-1. 전체 재료명 리스트를 텍스트로 반환 (추가)
+    // B-1. 전체 재료명 리스트를 텍스트로 반환
     @Override
     public String getAllIngredientNamesAsString(Long userId) throws SQLException {
         List<String> names = fridgeDAO.findIngredientNamesByUserId(userId);
         return String.join(", ", names);
     }
 
-    // ⭐️ B-1. 선택된 재료 ID 목록으로 재료명 리스트를 텍스트로 반환 (추가)
+    // B-1. 선택된 재료 ID 목록으로 재료명 리스트를 텍스트로 반환
     @Override
     public String getIngredientNamesByIds(List<Long> idList, Long userId) throws SQLException, UnauthorizedAccessException {
         List<String> names = fridgeDAO.findIngredientNamesByIds(idList, userId);
 
-        // DAO에서 이미 userId로 필터링되므로, 여기에 반환된 names는 사용자 소유의 재료명만 포함합니다.
+        // DAO에서 이미 userId로 필터링되므로, 여기에 반환된 names는 사용자 소유의 재료명만 포함
         return String.join(", ", names);
     }
 }

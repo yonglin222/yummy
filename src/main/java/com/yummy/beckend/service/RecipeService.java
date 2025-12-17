@@ -13,10 +13,10 @@ public interface RecipeService {
     int getRecipeCount(String keyword, Long typeCatId, Long methodCatId) throws SQLException;
 
     // 키워드 검색
-    List<RecipeDto> searchRecipes(String keyword) throws SQLException;
+    // List<RecipeDto> searchRecipes(String keyword) throws SQLException;
     
     // 전체 목록 조회
-    List<RecipeDto> getAllRecipes() throws SQLException;
+    // List<RecipeDto> getAllRecipes() throws SQLException;
     
     // 레시피 상세 조회 (즐겨찾기 여부 + 카테고리 정보 + 자동 번호 매기기 포함)
     RecipeDto getRecipeDetail(Long recipeId, Long userId) throws SQLException;

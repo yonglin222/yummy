@@ -22,9 +22,9 @@ public class AiService {
 }
 
     /**
-     * 🔥 AI 추천 요청
-     * @param query 사용자가 입력한 문장
-     * @param userId 로그인 회원ID or "guest"
+     * AI 추천 요청
+    // @param query 사용자가 입력한 문장
+    // @param userId 로그인 회원ID or "guest"
      */
     public AiRecommendResponse recommend(String query, String userId) {
         return webClient.get()

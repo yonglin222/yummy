@@ -28,9 +28,9 @@ public interface FridgeService {
     // FridgeService.java Interface 추가
     void removeIngredients(List<Long> idList, Long userId) throws SQLException;
 
-    // ⭐️ B-1. 전체 재료명 리스트를 텍스트로 반환 (추가)
+    // B-1. 전체 재료명 리스트를 텍스트로 반환
     String getAllIngredientNamesAsString(Long userId) throws SQLException;
 
-    // ⭐️ B-1. 선택된 재료 ID 목록으로 재료명 리스트를 텍스트로 반환 (추가)
+    // B-1. 선택된 재료 ID 목록으로 재료명 리스트를 텍스트로 반환
     String getIngredientNamesByIds(List<Long> idList, Long userId) throws SQLException, UnauthorizedAccessException;
 }

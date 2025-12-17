@@ -18,7 +18,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Autowired
     private RecipeDAO recipeDAO;
 
-    // --- [Helper] 레시피 만드는 법 자동 순번 매기기 로직 ---
+    // 레시피 만드는 법 자동 순번 매기기 로직
     private void processRecipeMethod(RecipeDto recipe) {
         if (recipe == null || recipe.getMethod() == null) {
             recipe.setMethodSteps(new ArrayList<>());
@@ -48,9 +48,7 @@ public class RecipeServiceImpl implements RecipeService {
         recipe.setMethodSteps(steps);
     }
 
-    /**
-     * 통합 레시피 목록 조회 (검색 + 카테고리 + 페이징)
-     */
+    // 통합 레시피 목록 조회 (검색 + 카테고리 + 페이징)
     @Override
     public List<RecipeDto> getRecipeList(int page, int pageSize, String keyword, Long typeCatId, Long methodCatId) throws SQLException {
         Map<String, Object> params = new HashMap<>();
@@ -59,7 +57,6 @@ public class RecipeServiceImpl implements RecipeService {
         params.put("methodCatId", methodCatId);
 
         // Oracle ROWNUM 페이징 계산
-        // 1페이지(1~12), 2페이지(13~24) ...
         int startRow = (page - 1) * pageSize;
         int endRow = page * pageSize;
 
@@ -69,9 +66,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeDAO.selectRecipeList(params);
     }
 
-    /**
-     * 전체 레시피 개수 조회 (페이징 버튼 계산용)
-     */
+    // 전체 레시피 개수 조회 (페이징 버튼 계산용)
     @Override
     public int getRecipeCount(String keyword, Long typeCatId, Long methodCatId) throws SQLException {
         Map<String, Object> params = new HashMap<>();
@@ -82,9 +77,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeDAO.countRecipeList(params);
     }
 
-    /**
-     * 레시피 상세 조회
-     */
+    // 레시피 상세 조회
     @Override
     public RecipeDto getRecipeDetail(Long recipeId, Long userId) throws SQLException {
         // 1. 기본 정보 및 즐겨찾기 여부 조회
@@ -105,8 +98,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipe;
     }
 
-    // --- 즐겨찾기 관련 로직 ---
-
+    // 즐겨찾기 관련 로직(토글)
     @Override
     @Transactional(rollbackFor = SQLException.class)
     public void toggleFavorite(Long userId, Long recipeId) throws SQLException {
@@ -129,15 +121,14 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeDAO.findFavoritesByUserId(userId);
     }
 
-    // 기존의 단순 searchRecipes, getAllRecipes는 getRecipeList로 통합되었으므로 제거하거나
-    // 인터페이스 유지를 위해 남겨둔다면 아래처럼 구현 가능합니다. (현재 로직상 불필요)
-    @Override
-    public List<RecipeDto> searchRecipes(String keyword) throws SQLException {
-        return getRecipeList(1, 1000, keyword, 0L, 0L);
-    }
+    // searchRecipes, getAllRecipes는 getRecipeList로 통합되었으므로 제거
+    // @Override
+    // public List<RecipeDto> searchRecipes(String keyword) throws SQLException {
+    //     return getRecipeList(1, 1000, keyword, 0L, 0L);
+    // }
 
-    @Override
-    public List<RecipeDto> getAllRecipes() throws SQLException {
-        return getRecipeList(1, 1000, null, 0L, 0L);
-    }
+    // @Override
+    // public List<RecipeDto> getAllRecipes() throws SQLException {
+    //     return getRecipeList(1, 1000, null, 0L, 0L);
+    // }
 }
