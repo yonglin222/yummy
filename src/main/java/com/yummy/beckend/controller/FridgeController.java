@@ -200,7 +200,7 @@ public class FridgeController {
             @SuppressWarnings("unchecked")
             Map<String, Object> fastApiResponse =
                     restTemplate.postForObject(
-                            "http://127.0.0.1:8000/api/recommend/fridge",
+                            "http://192.168.0.7:8000/api/recommend/fridge",
                             requestBody,
                             Map.class
                     );

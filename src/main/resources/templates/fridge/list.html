@@ -38,15 +38,13 @@
 
             <div class="big-fridge">
                 <div class="fridge-section" data-category="freezer">
-                    <div class="section-body" id="freezerList">
-                        </div>
+                    <div class="section-body" id="freezerList"></div>
                 </div>
 
                 <div class="fridge-handle"></div>
 
                 <div class="fridge-section" data-category="fridge">
-                    <div class="section-body" id="fridgeList">
-                        </div>
+                    <div class="section-body" id="fridgeList"></div>
                 </div>
             </div>
 
@@ -59,8 +57,7 @@
                 </div>
 
                 <div class="room-shelf">
-                    <div class="section-body" id="roomList">
-                        </div>
+                    <div class="section-body" id="roomList"></div>
                     <div class="shelf-feet">
                         <span></span><span></span>
                     </div>
@@ -69,10 +66,6 @@
         </section>
 
         <section class="bottom-area">
-            <button id="recipeSelectedBtn" class="recipe-btn selected">
-                선택 재료로 레시피 불러오기
-            </button>
-
             <button id="recipeAllBtn" class="recipe-btn all">
                 전체 재료로 레시피 불러오기
             </button>
@@ -87,7 +80,6 @@
     <th:block th:replace="~{modules/footer :: footerFragment}"></th:block>
 
     <script th:src="@{/js/modal.js}"></script>
-
     <script th:src="@{/js/fridge-list.js}"></script>
 
 </body>
