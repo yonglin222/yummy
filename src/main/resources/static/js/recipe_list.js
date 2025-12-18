@@ -199,3 +199,41 @@ function updateFavoriteUI(isActive) {
     favBtn.dataset.hoverText = "즐겨찾기 추가하기";
   }
 }
+document.addEventListener("DOMContentLoaded", () => {
+  // --- 기존 코드 (필터, 카드 클릭 이벤트 등) ---
+  
+  // 1. URL 파라미터 확인 로직 추가
+  const urlParams = new URLSearchParams(window.location.search);
+  const targetId = urlParams.get("targetId");
+
+  // 만약 targetId 파라미터가 있다면 즉시 상세 정보 로드
+  if (targetId) {
+    loadRecipeDetail(targetId);
+    
+    // (선택사항) 주소창에서 targetId를 제거하고 싶다면 아래 주석 해제
+    // history.replaceState({}, null, window.location.pathname);
+  }
+
+  // --- 아래는 기존에 제공해주신 코드들 ---
+  document.querySelectorAll(".recipe-thumbnail").forEach((img) => {
+    img.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  });
+
+  // 종류별 필터... 방법별 필터... 생략
+
+  const cards = document.querySelectorAll(".recipe-card");
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      const recipeId = card.getAttribute("data-id");
+      if (recipeId) {
+        loadRecipeDetail(recipeId);
+      }
+    });
+  });
+
+  // 뒤로가기 & 즐겨찾기 버튼 설정... 생략
+});
+
+// loadRecipeDetail, renderDetailView 등 나머지 함수들은 기존 코드 유지

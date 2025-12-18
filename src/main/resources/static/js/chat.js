@@ -110,7 +110,7 @@ function appendRecipeCard(recipe) {
                     <strong>재료:</strong> ${recipe.ingredient || "상세보기 참조"}
                 </p>
 
-                <a href="/recipe/detail/${recipe.recipeId}" class="recipe-link-btn" 
+                <a href="/recipe/list?targetId=${recipe.recipeId}" class="recipe-link-btn" 
                    style="display: block; text-align: center; background: #6bbd45; color: white; padding: 10px; text-decoration: none; border-radius: 8px; font-weight: bold;">
                    레시피 보러가기 →
                 </a>

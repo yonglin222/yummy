@@ -96,4 +96,17 @@ public class FridgeServiceImpl implements FridgeService {
         // DAO에서 이미 userId로 필터링되므로, 여기에 반환된 names는 사용자 소유의 재료명만 포함
         return String.join(", ", names);
     }
+     @Override
+    public List<String> getIngredientNames(Long userId) throws SQLException {
+        return fridgeDAO.findIngredientNamesByUserId(userId);
+    }
+
+    /** 선택된 재료 이름 */
+    @Override
+    public List<String> getIngredientNamesByIds(Long userId, List<Long> idList) throws SQLException {
+        if (idList == null || idList.isEmpty()) {
+            return List.of();
+        }
+        return fridgeDAO.findIngredientNamesByIds(idList, userId);
+    }
 }

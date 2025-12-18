@@ -31,4 +31,11 @@ public interface FridgeService {
 
     // B-1. 선택된 재료 ID 목록으로 재료명 리스트를 텍스트로 반환
     String getIngredientNamesByIds(List<Long> idList, Long userId) throws SQLException, UnauthorizedAccessException;
+
+    // 🔥 AI 냉장고 추천용 (전체 재료)
+    List<String> getIngredientNames(Long userId) throws SQLException;
+
+    // 🔥 AI 냉장고 추천용 (선택 재료)
+    List<String> getIngredientNamesByIds(Long userId, List<Long> idList) throws SQLException;
+    
 }

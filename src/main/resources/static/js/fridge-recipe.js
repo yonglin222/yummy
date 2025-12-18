@@ -1,149 +1,172 @@
-// 전역/스코프 변수를 선언하여 AI 쿼리 정보를 저장합니다.
-let currentRecipeQuery = "";
+/**
+ * fridge-recipe.js
+ * 역할:
+ * - URL 파라미터로 recipeId, aiMessage 수신
+ * - Spring API (/recipe/api/detail/{id}) 로 레시피 상세 조회
+ * - 화면 렌더링
+ * - "같은 재료로 다시 추천" → 냉장고 페이지로 이동
+ * - "나의 냉장고로 돌아가기" 처리
+ */
+
+/* =========================================
+   전역 변수
+   ========================================= */
+
+// (참고용) 이전 AI 메시지
+let currentAiMessage = "";
+
+
+/* =========================================
+   DOM 로드
+   ========================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
-    // URL 쿼리 파라미터에서 초기 정보를 가져옵니다.
     const urlParams = new URLSearchParams(window.location.search);
-    const recipeId = urlParams.get('recipeId');
-    const aiMessage = urlParams.get('aiMessage');
-    
-    // ⭐️ AI에게 보냈던 원본 쿼리를 저장합니다. (URL 디코딩 필요)
-    const encodedRecipeQuery = urlParams.get('recipeQuery');
-    if (encodedRecipeQuery) {
-        currentRecipeQuery = decodeURIComponent(encodedRecipeQuery);
-    }
-    // console.log("저장된 쿼리:", currentRecipeQuery); // 디버깅용
 
-    // 1. 초기 레시피 로드
-    if (recipeId) {
-        loadRecipe(recipeId, aiMessage);
-    } else {
-        document.getElementById("recipe-title").textContent = "레시피를 찾을 수 없습니다.";
-        document.getElementById("ai-response-message").textContent = "AI 추천 과정에서 오류가 발생했거나 유효한 레시피 ID를 받지 못했습니다.";
+    const recipeId = urlParams.get("recipeId");
+    const aiMessage = urlParams.get("aiMessage");
+
+    if (aiMessage) {
+        currentAiMessage = decodeURIComponent(aiMessage);
     }
 
+    // 1️⃣ 레시피 ID 유효성 체크
+    if (!recipeId) {
+        showError(
+            "레시피를 찾을 수 없습니다.",
+            "유효한 레시피 ID를 전달받지 못했습니다."
+        );
+        return;
+    }
 
-    // 2. 버튼 이벤트 설정
-    document.getElementById("newRecipeBtn").addEventListener("click", () => {
-        // ⭐️ 저장된 쿼리 텍스트를 사용하여 재요청
-        reloadRecipe(currentRecipeQuery); 
-    });
+    // 2️⃣ AI 메시지 표시
+    document.getElementById("ai-response-message").textContent =
+        currentAiMessage || "AI가 냉장고 재료를 기반으로 레시피를 추천했어요!";
 
-    document.getElementById("backToFridgeBtn").addEventListener("click", () => {
-        // 나의 냉장고 목록 페이지로 돌아가기
-        window.location.href = "/fridge/list";
-    });
+    // 3️⃣ 레시피 상세 로드
+    loadRecipeDetail(recipeId);
+
+    // 4️⃣ 버튼 이벤트
+    bindButtons();
 });
 
-/**
- * [목표] 주어진 레시피 ID를 기반으로 상세 정보를 AJAX로 가져와 페이지를 채웁니다.
- */
-function loadRecipe(recipeId, aiMessage) {
-    // 💡 URL에서 가져온 메시지는 디코딩하여 사용
-    document.getElementById("ai-response-message").textContent = decodeURIComponent(aiMessage) || "AI가 맞춤 레시피를 추천했습니다!";
-    
+
+/* =========================================
+   버튼 이벤트
+   ========================================= */
+
+function bindButtons() {
+
+    // 같은 재료로 다시 추천
+    document.getElementById("newRecipeBtn").addEventListener("click", () => {
+        // 👉 냉장고 페이지로 돌아가서 다시 선택/추천
+        window.location.href = "/fridge/list";
+    });
+
+    // 냉장고로 돌아가기
+    document.getElementById("backToFridgeBtn").addEventListener("click", () => {
+        window.location.href = "/fridge/list";
+    });
+}
+
+
+/* =========================================
+   레시피 상세 로드
+   ========================================= */
+
+function loadRecipeDetail(recipeId) {
+
     fetch(`/recipe/api/detail/${recipeId}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            if (data.status === 'OK' && data.recipe) {
-                const recipe = data.recipe;
-                
-                // 1. 제목 및 메타 정보
-                document.getElementById("recipe-title").textContent = recipe.name;
-                document.getElementById("recipe-cookTime").textContent = `${recipe.time}분`;
-                document.getElementById("recipe-serving").textContent = `${recipe.serving}인분`;
-
-                // 2. 재료 (ingredients)
-                const ingList = document.getElementById("ingredient-list");
-                // ⭐️⭐️⭐️ recipe.ingredient가 null일 경우 빈 문자열로 대체 (Null Safety) ⭐️⭐️⭐️
-                const ingredientText = recipe.ingredient || ""; 
-                ingList.innerHTML = ingredientText.split(/[\n,]/)
-                                                    .map(i => i.trim())
-                                                    .filter(i => i.length > 0)
-                                                    .map(i => `<li>${i}</li>`)
-                                                    .join("");
-                
-                // 3. 양념 (seasoning)
-                const seasoning = document.getElementById("seasoning-list");
-                // ⭐️⭐️⭐️ recipe.spicyIngredient가 null일 경우 빈 문자열로 대체 (Null Safety) ⭐️⭐️⭐️
-                const spicyIngredientText = recipe.spicyIngredient || "";
-                seasoning.innerHTML = spicyIngredientText.split(/[\n,]/)
-                                                            .map(s => s.trim())
-                                                            .filter(s => s.length > 0)
-                                                            .map(s => `<li>${s}</li>`)
-                                                            .join("");
-
-                // 4. 만드는 법 (methodSteps - Service에서 이미 리스트로 처리됨)
-                const steps = document.getElementById("steps-list");
-                // recipe.methodSteps가 null이거나 비어있을 경우에 대한 방어 로직은 이미 Array.map()이 처리해줍니다.
-                steps.innerHTML = recipe.methodSteps.map(s => `<li>${s}</li>`).join("");
-
-            } else {
-                document.getElementById("recipe-title").textContent = "레시피 상세 정보를 불러오지 못했습니다.";
+            if (data.status !== "OK" || !data.recipe) {
+                throw new Error("Invalid recipe response");
             }
+
+            renderRecipe(data.recipe);
         })
-        .catch(error => {
-            console.error('레시피 상세 정보 로드 오류:', error);
-            document.getElementById("recipe-title").textContent = "데이터 통신 오류가 발생했습니다.";
+        .catch(err => {
+            console.error("레시피 상세 조회 오류:", err);
+            showError(
+                "레시피 정보를 불러오지 못했습니다.",
+                "잠시 후 다시 시도해주세요."
+            );
         });
 }
 
 
-/**
- * ⭐️ '같은 재료로 다른 레시피 추천 받기' 로직 (수정됨)
- */
-function reloadRecipe(recipeQueryText) {
-    if (!recipeQueryText || recipeQueryText.trim() === "") {
-        alert("이전 재료 정보가 없어 다시 추천을 요청할 수 없습니다. 냉장고 목록으로 돌아가 재시도해주세요.");
-        window.location.href = "/fridge/list";
+/* =========================================
+   렌더링
+   ========================================= */
+
+function renderRecipe(recipe) {
+
+    // 제목
+    document.getElementById("recipe-title").textContent = recipe.name;
+
+    // 메타 정보
+    document.getElementById("recipe-cookTime").textContent =
+        `${recipe.time ?? 0}분`;
+    document.getElementById("recipe-serving").textContent =
+        `${recipe.serving ?? 0}인분`;
+
+    // 재료
+    renderList(
+        "ingredient-list",
+        recipe.ingredient
+    );
+
+    // 양념
+    renderList(
+        "seasoning-list",
+        recipe.spicyIngredient
+    );
+
+    // 만드는 법
+    renderSteps(
+        "steps-list",
+        recipe.methodSteps
+    );
+}
+
+
+function renderList(elementId, text) {
+    const el = document.getElementById(elementId);
+    const safeText = text || "";
+
+    el.innerHTML = safeText
+        .split(/[\n,]/)
+        .map(v => v.trim())
+        .filter(v => v.length > 0)
+        .map(v => `<li>${v}</li>`)
+        .join("");
+}
+
+
+function renderSteps(elementId, steps) {
+    const el = document.getElementById(elementId);
+
+    if (!Array.isArray(steps) || steps.length === 0) {
+        el.innerHTML = "<li>조리 단계 정보가 없습니다.</li>";
         return;
     }
-    
-    // 로딩 시작 (필요하다면 showLoading() 호출)
-    console.log("AI 재추천 요청 시작...");
 
-    // 1. 서버의 /fridge/recommend API를 재호출
-    fetch('/fridge/recommend', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        // ⭐️ 'recipeQuery'로 수정하여 백엔드와 일치시킴
-        body: `recipeQuery=${encodeURIComponent(recipeQueryText)}` 
-    })
-    .then(response => response.json())
-    .then(data => {
-        // hideLoading(); // 로딩 숨김
+    el.innerHTML = steps
+        .map(step => `<li>${step}</li>`)
+        .join("");
+}
 
-        if (data.status === 'OK' && data.recipeId) {
-            // 2. 성공적으로 새 레시피 ID를 받은 경우, 현재 창의 URL을 새 정보로 교체 (창 이동)
-            const recipeId = data.recipeId;
-            const aiMessage = encodeURIComponent(data.aiMessage);
-            const newRecipeQuery = encodeURIComponent(data.recipeQuery); // AI에게 전송한 최종 쿼리 재저장
 
-            const detailUrl = `/fridge/recipe-detail?recipeId=${recipeId}&aiMessage=${aiMessage}&recipeQuery=${newRecipeQuery}`;
-            
-            // 현재 창을 새로운 레시피 상세 페이지로 이동
-            window.location.href = detailUrl;
+/* =========================================
+   에러 처리
+   ========================================= */
 
-        } else if (data.status === 'UNAUTHORIZED') {
-            alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
-            window.location.href = "/user/loginForm";
-        } else if (data.status === 'OK' && !data.recipeId) {
-            alert("AI가 새로운 레시피를 찾지 못했습니다. AI 답변: " + data.aiMessage);
-        } else {
-            // 서버 오류를 JSON으로 받은 경우
-            alert("재추천 중 오류가 발생했습니다: " + (data.message || "서버 오류"));
-        }
-    })
-    .catch(error => {
-        // 네트워크/파싱 오류
-        console.error('AI 재추천 API 호출 오류:', error);
-        alert('서버와 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
-    });
+function showError(title, message) {
+    document.getElementById("recipe-title").textContent = title;
+    document.getElementById("ai-response-message").textContent = message;
 }

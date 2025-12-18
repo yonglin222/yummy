@@ -36,7 +36,9 @@
         </form>
     </div>
 
-    <!-- <th:block th:replace="~{modules/recipe_detail :: recipeDetailFragment}"></th:block> -->
+    <th:block th:replace="~{modules/recipe_detail :: recipeDetailFragment}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/recipe_list.css}">
+
 
 
     <script th:inline="javascript">
@@ -49,6 +51,8 @@
     </script>
 
     <script th:src="@{/js/chat.js}"></script>
+    
+    <script th:src="@{/js/recipe_list.js}"></script>
     
 </body>
 </html>
