@@ -154,20 +154,37 @@ function renderList(elementId, data) {
 // ============================================
 // API: 즐겨찾기 토글
 // ============================================
-function toggleFavorite(recipeId) {
+// [중요] async 키워드를 추가하여 비동기 모달 응답을 기다릴 수 있게 합니다.
+async function toggleFavorite(recipeId) {
   fetch("/recipe/toggleFavorite", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: `recipeId=${recipeId}`,
   })
     .then((res) => res.json())
-    .then((data) => {
+    .then(async (data) => { // 데이터 처리 부분에도 async 추가
+      
+      // 1. 로그인 안 된 상태 (UNAUTHORIZED) 처리
       if (data.status === "UNAUTHORIZED") {
-        showAutoModal("로그인 후 이용 가능합니다.");
-        return;
+        
+        if (typeof showConfirmModal === "function") {
+          // 프론트팀이 만든 커스텀 확인 모달 띄우기
+          const result = await showConfirmModal("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?");
+          
+          // 사용자가 '확인'을 눌렀을 때만 로그인 페이지로 이동
+          if (result) {
+            location.href = "/user/loginForm";
+          }
+        } else {
+          // 커스텀 모달 함수가 없을 경우 대비 (비상용 브라우저 기본 confirm)
+          if (confirm("로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?")) {
+            location.href = "/user/loginForm";
+          }
+        }
+        return; // 로그인 체크 후 함수 종료
       }
 
-      // ✅ 정상 토글
+      // 2. 정상적으로 즐겨찾기 토글이 완료된 경우 (OK)
       if (data.status === "OK") {
         updateFavoriteUI(data.isFavorite);
 
@@ -179,7 +196,10 @@ function toggleFavorite(recipeId) {
         return;
       }
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error(err);
+      alert("서버 통신 중 오류가 발생했습니다.");
+    });
 }
 
 function updateFavoriteUI(isActive) {
